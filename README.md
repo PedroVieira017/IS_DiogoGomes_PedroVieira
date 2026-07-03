@@ -1,12 +1,13 @@
 # IS_DiogoGomes_PedroVieira
 
-Projeto de demonstracao com tres modulos de raciocinio visual:
+Projeto de demonstração com quatro módulos de raciocínio visual e simbólico:
 
-- **LogicRAG**: usa uma base de conhecimento pre-computada do KITTI, traduz factos em First-Order Logic para linguagem natural e envia o contexto para um agente IAedu.
-- **LLaVA-SpaceSGG**: envia uma imagem real para a API IAedu e recebe uma descricao estruturada com objetos, caixas, relacoes espaciais, camadas de profundidade e perguntas/respostas comparativas.
-- **VisuLogic**: integra o codigo oficial de avaliacao do benchmark VisuLogic e envia imagem + pergunta para a API IAedu ou para um modelo local via Ollama.
+- **LogicRAG**: usa uma base de conhecimento pré-computada do KITTI, traduz factos em First-Order Logic para linguagem natural e envia o contexto para um agente IAedu.
+- **LLaVA-SpaceSGG**: envia uma imagem real para a API IAedu e recebe uma descrição estruturada com objetos, caixas, relações espaciais, camadas de profundidade e perguntas/respostas comparativas.
+- **VisuLogic**: integra o código oficial de avaliação do benchmark VisuLogic e envia imagem + pergunta para a API IAedu ou para um modelo local via Ollama.
+- **MuSLR**: integra o artigo "MuSLR: Multimodal Symbolic Logical Reasoning" (NeurIPS 2025) e a framework LogiCAM para avaliar raciocínio simbólico formal (True/False/Unknown) sobre imagens e regras lógicas.
 
-Os fluxos LogicRAG, LLaVA-SpaceSGG e VisuLogic podem correr de duas formas:
+Os fluxos LogicRAG, LLaVA-SpaceSGG, VisuLogic e MuSLR podem correr de duas formas:
 
 - `iaedu`: envia o pedido para a API IAedu na nuvem.
 - `ollama`: corre um modelo local atraves do Ollama (`llama3` para texto, `llava` para visao), sem internet nem chave de API.
@@ -34,6 +35,12 @@ O objetivo do repositorio e deixar um fluxo reproduzivel para demonstracao, scre
 |   +-- VisuLogic-Eval/
 |       +-- models/iaedu_api.py
 |       +-- models/ollama_vision.py
++-- MuSLR/
+|   +-- README.md
+|   +-- muslr_agent.py
+|   +-- data/
+|   +-- resultados/
+|   +-- MuSLR-Code/
 +-- .gitignore
 ```
 
@@ -69,7 +76,16 @@ IAEDU_CHANNEL_ID=colocar_o_channel_id
 IAEDU_THREAD_ID=colocar_um_thread_id
 ```
 
-Criar tambem um ficheiro `.env` dentro de `VisuLogic/`:
+Criar também um ficheiro `.env` dentro de `VisuLogic/`:
+
+```env
+OPENAI_API_KEY=colocar_a_chave_iaedu
+OPENAI_API_ENDPOINT=colocar_o_endpoint_stream_iaedu
+IAEDU_CHANNEL_ID=colocar_o_channel_id
+IAEDU_THREAD_ID=colocar_um_thread_id
+```
+
+Criar também um ficheiro `.env` dentro de `MuSLR/`:
 
 ```env
 OPENAI_API_KEY=colocar_a_chave_iaedu
@@ -84,6 +100,7 @@ Para confirmar que os ficheiros existem sem mostrar as chaves:
 Get-Content .\LogicRAG\.env | ForEach-Object { ($_ -split '=')[0] + '=***' }
 Get-Content .\LLaVA-SpaceSGG\.env | ForEach-Object { ($_ -split '=')[0] + '=***' }
 Get-Content .\VisuLogic\.env | ForEach-Object { ($_ -split '=')[0] + '=***' }
+Get-Content .\MuSLR\.env | ForEach-Object { ($_ -split '=')[0] + '=***' }
 ```
 
 ## Execução via Docker 
@@ -332,6 +349,43 @@ Ver instrucoes completas em:
 VisuLogic/README.md
 ```
 
+## Modulo 4: MuSLR / LogiCAM
+
+O MuSLR fica em:
+
+```text
+MuSLR/
+```
+
+Este módulo avalia raciocínio simbólico multimodal utilizando a framework LogiCAM. O dataset completo deve ser descarregado de huggingface.co/datasets/Aiden0526/MuSLR. Para demonstrações rápidas, o módulo inclui um ficheiro de exemplo em `MuSLR/data/muslr_sample.jsonl`.
+
+Preparar ambiente:
+
+```powershell
+cd .\MuSLR
+python -m pip install requests python-dotenv pillow
+```
+
+Executar com a API IAedu (nuvem):
+
+```powershell
+python .\muslr_agent.py --dataset .\data\muslr_sample.jsonl --id demo_001
+```
+
+Executar com Ollama (local):
+
+```powershell
+$env:LLM_BACKEND="ollama"
+python .\muslr_agent.py --dataset .\data\muslr_sample.jsonl --id demo_001
+Remove-Item Env:\LLM_BACKEND
+```
+
+Ver instruções completas em:
+
+```text
+MuSLR/README.md
+```
+
 ## Verificacao Antes de Commit
 
 Antes de fazer commit, confirmar o estado do repositorio:
@@ -361,6 +415,8 @@ Screenshots uteis:
 - Execucao de `python .\driving_agent.py` com a resposta do agente.
 - Execucao de `run_iaedu_image.py` e visualizacao do JSON.
 - Estrutura e comandos do modulo `VisuLogic`.
+- Execução do agente `MuSLR` no terminal e output gerado em `resultados/muslr_output.json`.
+- Execução integrada com Docker através de `docker compose run --rm app python integra.py`.
 - GitHub com o commit de documentacao.
 
 Nunca colocar chaves reais da API em screenshots, slides ou commits.
