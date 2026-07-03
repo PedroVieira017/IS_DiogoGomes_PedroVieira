@@ -105,7 +105,15 @@ O contentor utiliza as credenciais nos ficheiros `.env` locais de cada módulo.
   > - No macOS/Linux, arranque o Ollama no terminal com: `OLLAMA_HOST=0.0.0.0 ollama serve`
   > - No Windows, defina a variável de ambiente de sistema `OLLAMA_HOST` para `0.0.0.0` e reinicie o Ollama.
 
-### 3. Comandos para Executar cada Módulo
+### 3. Execução Interativa Integrada (Recomendado)
+
+O repositório inclui um script de integração `integra.py` que disponibiliza um menu no terminal para executar interativamente qualquer um dos 4 projetos:
+```bash
+docker compose run --rm app python integra.py
+```
+*(Será apresentado um menu numerado onde poderá escolher o projeto e o backend desejado (IAedu ou Ollama).)*
+
+### 4. Comandos Individuais para Executar cada Módulo
 
 #### A. LogicRAG
 > [!NOTE]
