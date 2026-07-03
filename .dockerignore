@@ -1,0 +1,27 @@
+# Controlo de versões e metadados (o .git sozinho tem GBs)
+.git
+.gitignore
+.vscode
+.claude
+.DS_Store
+**/.DS_Store
+
+# Ambientes virtuais locais (recriados dentro da imagem via requirements.docker.txt)
+LogicRAG/lrag_mac/
+LLaVA-SpaceSGG/llava_mac/
+**/venv/
+**/.venv/
+
+# Dados grandes e pré-computados (montados por volume quando necessários)
+LogicRAG/LogicRAG_Data/
+**/__MACOSX/
+
+# Caches e artefactos de execução
+**/__pycache__/
+**/*.pyc
+**/outputs/
+**/resultados/
+
+# Documentação e ambientes conda (não usados no build Docker)
+**/*.ipynb
+**/environment.yml

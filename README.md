@@ -39,11 +39,13 @@ O objetivo do repositorio e deixar um fluxo reproduzivel para demonstracao, scre
 
 ## Requisitos
 
-- Windows com PowerShell
-- Miniconda ou Anaconda
-- Ambiente conda `lrag`
-- Credenciais da API IAedu
+O caminho recomendado é o **Docker** — corre os quatro módulos num único contentor, sem instalar Python, Conda nem pacotes de IA localmente (ver [Execução via Docker](#execução-via-docker)).
+
+- Docker + Docker Compose (caminho principal)
+- Credenciais da API IAedu (ficheiros `.env` por módulo) **ou** Ollama instalado no host para inferência local
 - Dados pre-computados do LogicRAG em `LogicRAG/LogicRAG_Data/`
+
+Alternativamente, é possível correr sem Docker com Miniconda/Anaconda e um ambiente `lrag` (instruções em PowerShell nas secções de demo mais abaixo).
 
 Os ficheiros `.env`, dados grandes, zips e outputs locais nao devem ser enviados para o GitHub.
 
@@ -82,6 +84,64 @@ Para confirmar que os ficheiros existem sem mostrar as chaves:
 Get-Content .\LogicRAG\.env | ForEach-Object { ($_ -split '=')[0] + '=***' }
 Get-Content .\LLaVA-SpaceSGG\.env | ForEach-Object { ($_ -split '=')[0] + '=***' }
 Get-Content .\VisuLogic\.env | ForEach-Object { ($_ -split '=')[0] + '=***' }
+```
+
+## Execução via Docker 
+
+Todos os quatro módulos do projeto (**LogicRAG**, **LLaVA-SpaceSGG**, **VisuLogic** e **MuSLR**) podem ser executados dentro de um único contentor Docker, sem a necessidade de configurar ambientes Conda locais ou instalar pacotes de IA pesados.
+
+### 1. Construir a Imagem Docker
+A partir da raiz do projeto, execute:
+```bash
+docker compose build
+```
+
+### 2. Configuração do Backend (IAedu ou Ollama)
+O contentor utiliza as credenciais nos ficheiros `.env` locais de cada módulo. 
+- **Para IAedu (Nuvem):** Garanta que os ficheiros `.env` estão configurados nas pastas respetivas de cada módulo com as chaves corretas.
+- **Para Ollama (Local no Host):** Para aceder ao Ollama instalado no seu computador a partir de dentro do Docker, os scripts utilizam `http://host.docker.internal:11434`.
+  > [!IMPORTANT]
+  > Para que o Ollama no seu computador aceite ligações vindas do Docker, deve configurá-lo para escutar em todas as interfaces. 
+  > - No macOS/Linux, arranque o Ollama no terminal com: `OLLAMA_HOST=0.0.0.0 ollama serve`
+  > - No Windows, defina a variável de ambiente de sistema `OLLAMA_HOST` para `0.0.0.0` e reinicie o Ollama.
+
+### 3. Comandos para Executar cada Módulo
+
+#### A. LogicRAG
+> [!NOTE]
+> Estes scripts esperam ser executados a partir da pasta `LogicRAG/` (usam caminhos relativos como `LogicRAG_Data/...`), por isso o comando fixa o working-dir com `-w /app/LogicRAG`. Requer os dados pré-computados em `LogicRAG/LogicRAG_Data/precomputed_knowledge_base/kb_out_kitti/`.
+
+1. Traduzir factos em First-Order Logic para linguagem natural:
+   ```bash
+   docker compose run --rm -w /app/LogicRAG app python parse_kb_to_csv.py
+   ```
+2. Executar inferência (IAedu ou Ollama):
+   ```bash
+   docker compose run --rm -w /app/LogicRAG app python driving_agent.py
+   ```
+
+#### B. LLaVA-SpaceSGG
+1. Executar análise da imagem:
+   ```bash
+   docker compose run --rm app python LLaVA-SpaceSGG/dataset_pipeline/stage2/run_iaedu_image.py --image LLaVA-SpaceSGG/images_real/primeira_imagem.png --output-file LLaVA-SpaceSGG/resultados/teste_docker.json
+   ```
+2. Gerar visualização das camadas de profundidade:
+   ```bash
+   docker compose run --rm app python LLaVA-SpaceSGG/dataset_pipeline/stage2/visualize_layers.py --result-file LLaVA-SpaceSGG/resultados/teste_docker.json --output-file LLaVA-SpaceSGG/resultados/visualizacoes/teste_layers_docker.png
+   ```
+
+#### C. VisuLogic
+Executar a avaliação com a **amostra de demonstração** já incluída no repositório (2 exemplos + imagens em `VisuLogic/VisuLogic-Eval/demo/`), sem precisar de descarregar o benchmark completo:
+```bash
+docker compose run --rm -w /app/VisuLogic/VisuLogic-Eval app python evaluation/eval_model.py --input_file demo/data.jsonl --output_file outputs/iaedu_docker.jsonl --model_path iaedu --api_timeout 180
+```
+> [!NOTE]
+> A amostra `demo/` serve apenas para confirmar que o pipeline corre ponta-a-ponta. Para uma avaliação real, descarregar o dataset oficial de [huggingface.co/datasets/VisuLogic/VisuLogic](https://huggingface.co/datasets/VisuLogic/VisuLogic), colocar `data.jsonl` + `images/` em `VisuLogic/VisuLogic-Eval/` e usar `--input_file VisuLogic/VisuLogic-Eval/data.jsonl`.
+
+#### D. MuSLR
+Executar a inferência de raciocínio simbólico (exemplo demonstrativo):
+```bash
+docker compose run --rm app python MuSLR/muslr_agent.py --dataset MuSLR/data/muslr_sample.jsonl --id demo_001
 ```
 
 ## Preparar Ambiente

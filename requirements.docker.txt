@@ -1,0 +1,7 @@
+requests
+python-dotenv
+pillow
+tqdm
+openai
+numpy
+opencv-python-headless
