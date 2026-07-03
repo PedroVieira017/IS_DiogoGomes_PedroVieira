@@ -14,6 +14,16 @@ def load_model(args):
         model = OllamaVisionModel(model_name=model_name,
                                   endpoint=args.base_url if args.base_url else None,
                                   user_prompt=args.user_prompt)
+    elif model_path.startswith("iaedu"):
+        from models.iaedu_api import IAeduAPIModel
+
+        model = IAeduAPIModel(model_name=args.model_path,
+                              api_key=args.api_key,
+                              endpoint=args.base_url if args.base_url else None,
+                              channel_id=getattr(args, "channel_id", None),
+                              thread_id=getattr(args, "thread_id", None),
+                              user_prompt=args.user_prompt,
+                              timeout=getattr(args, "api_timeout", 120))
     elif args.model_path in ["gpt-4o", "gpt-4o-mini"]:
         from models.openai_api import OpenAIAPIModel
 
