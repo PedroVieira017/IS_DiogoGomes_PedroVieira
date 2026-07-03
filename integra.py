@@ -21,15 +21,16 @@ def cmd_muslr():
 
 def cmd_visulogic(backend):
     ep = os.getenv("OLLAMA_ENDPOINT", "http://host.docker.internal:11434/api/generate")
+    # eval_model.py faz sys.path.append(".") e importa o pacote `models`, por isso
+    # precisa que essa pasta esteja no PYTHONPATH quando corre a partir de /app.
+    os.environ["PYTHONPATH"] = "VisuLogic/VisuLogic-Eval"
     base = ["python", "VisuLogic/VisuLogic-Eval/evaluation/eval_model.py",
-            "--input_file", "VisuLogic/VisuLogic-Eval/data.jsonl",
+            "--input_file", "VisuLogic/VisuLogic-Eval/demo/data.jsonl",
             "--output_file", "VisuLogic/VisuLogic-Eval/outputs/docker_visulogic.jsonl"]
     if backend == "ollama":
         base += ["--model_path", "ollama:llava", "--base_url", ep]
     else:
-        base += ["--model_path", "gpt-4o",
-                 "--api_key", os.getenv("OPENAI_API_KEY", ""),
-                 "--base_url", os.getenv("OPENAI_API_ENDPOINT", "")]
+        base += ["--model_path", "iaedu"]
     return base
 
 
