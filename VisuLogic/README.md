@@ -10,7 +10,7 @@ Integracao do artigo **VisuLogic: A Benchmark for Evaluating Visual Reasoning in
 
 ## Objetivo da Integracao
 
-O VisuLogic avalia raciocinio visual em modelos multimodais atraves de perguntas de escolha multipla sobre imagens. O foco deste modulo e integrar o codigo de avaliacao oficial, documentar como preparar o benchmark e deixar comandos reproduziveis para uma demonstracao controlada.
+O VisuLogic avalia raciocinio visual em modelos multimodais atraves de perguntas de escolha multipla sobre imagens. O foco deste modulo e integrar o codigo de avaliacao oficial, ligar a avaliacao a API IAedu como nos outros modulos, documentar como preparar o benchmark e deixar comandos reproduziveis para uma demonstracao controlada.
 
 Foi usado o **Eval Code** em vez do **Train Code** porque o treino exige datasets grandes e infraestrutura pesada com GPUs de elevada memoria. Para este trabalho, a parte importante e compreender o benchmark, preparar a avaliacao e demonstrar como um modelo multimodal pode ser testado.
 
@@ -23,6 +23,8 @@ VisuLogic/
 +-- VisuLogic-Eval/
     +-- evaluation/
     +-- models/
+        +-- iaedu_api.py
+        +-- ollama_vision.py
     +-- scripts/
     +-- assets/
     +-- requirements.txt
@@ -41,7 +43,20 @@ cd .\VisuLogic\VisuLogic-Eval
 python -m pip install -r requirements.txt
 ```
 
-Nota: o ficheiro `requirements.txt` instala PyTorch com CUDA 12.1 e tambem inclui dependencias pesadas de modelos multimodais. Em maquinas sem GPU adequada, usar este modulo sobretudo para analise/documentacao ou avaliar atraves de uma API compativel com OpenAI.
+Nota: o ficheiro `requirements.txt` instala PyTorch com CUDA 12.1 e tambem inclui dependencias pesadas de modelos multimodais. Em maquinas sem GPU adequada, usar este modulo sobretudo para analise/documentacao ou avaliar atraves da API IAedu.
+
+## Configurar API IAedu
+
+Criar um ficheiro `.env` dentro de `VisuLogic/`, no mesmo estilo dos outros modulos:
+
+```env
+OPENAI_API_KEY=colocar_a_chave_iaedu
+OPENAI_API_ENDPOINT=colocar_o_endpoint_stream_iaedu
+IAEDU_CHANNEL_ID=colocar_o_channel_id
+IAEDU_THREAD_ID=colocar_um_thread_id
+```
+
+O ficheiro `.env` esta ignorado pelo GitHub e nao deve ser enviado para o repositorio.
 
 ## Preparar Dados do Benchmark
 
@@ -69,7 +84,7 @@ Confirmar que o codigo compila:
 
 ```powershell
 cd "C:\Users\Master\Desktop\IS_moreDiogoGomes\2025-LMM-LogicRag-Visual\IS_DiogoGomes_PedroVieira\VisuLogic\VisuLogic-Eval"
-python -m py_compile .\evaluation\eval_model.py .\models\__init__.py
+python -m py_compile .\evaluation\eval_model.py .\models\__init__.py .\models\iaedu_api.py
 ```
 
 Confirmar que o avaliador mostra os argumentos esperados:
@@ -80,9 +95,39 @@ python .\evaluation\eval_model.py --help
 
 ## Executar Avaliacao
 
+### Avaliacao com API IAedu
+
+Esta e a opcao alinhada com os modulos LogicRAG e LLaVA-SpaceSGG. O avaliador envia a imagem e a pergunta para o agente IAedu, recebe a resposta e extrai a opcao final (`A`, `B`, `C` ou `D`).
+
+Executar o VisuLogic com IAedu:
+
+```powershell
+cd "C:\Users\Master\Desktop\IS_moreDiogoGomes\2025-LMM-LogicRag-Visual\IS_DiogoGomes_PedroVieira\VisuLogic\VisuLogic-Eval"
+mkdir outputs
+python .\evaluation\eval_model.py `
+  --input_file .\data.jsonl `
+  --output_file .\outputs\iaedu_visulogic.jsonl `
+  --model_path iaedu `
+  --api_timeout 180
+```
+
+Se nao for usado `.env`, tambem e possivel passar os valores no comando:
+
+```powershell
+python .\evaluation\eval_model.py `
+  --input_file .\data.jsonl `
+  --output_file .\outputs\iaedu_visulogic.jsonl `
+  --model_path iaedu `
+  --api_key "COLOCAR_API_KEY" `
+  --base_url "COLOCAR_ENDPOINT_IAEDU" `
+  --channel_id "COLOCAR_CHANNEL_ID" `
+  --thread_id "visulogic" `
+  --api_timeout 180
+```
+
 ### Avaliacao com Ollama Local
 
-Esta e a opcao equivalente ao backend local ja usado nos modulos LogicRAG e LLaVA-SpaceSGG. O Ollama deve estar a correr e o modelo `llava` deve estar instalado.
+Esta e a alternativa local ja usada nos modulos LogicRAG e LLaVA-SpaceSGG. O Ollama deve estar a correr e o modelo `llava` deve estar instalado.
 
 Preparar o Ollama:
 

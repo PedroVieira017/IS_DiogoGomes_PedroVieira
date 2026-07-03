@@ -182,7 +182,10 @@ class ModelEvaluator:
     def evaluate(self):
         """Main evaluation function"""
         eval_data = self.load_data()
-        open(self.output_file, 'w').close()
+        output_dir = os.path.dirname(self.output_file)
+        if output_dir:
+            os.makedirs(output_dir, exist_ok=True)
+        open(self.output_file, 'w', encoding='utf-8').close()
         
         eval_results = []
         for item in tqdm(eval_data, desc="Evaluating"):
@@ -230,10 +233,13 @@ def main():
     parser.add_argument('--verbose', '-v', action='store_true', help='Print detailed information')
     parser.add_argument('--api_key', type=str, default='', help='API key')
     parser.add_argument('--judge_api_key', type=str, default='', help='judge API key')
-    parser.add_argument('--base_url', type=str, default='https://api.openai.com/v1', help='Base URL')
+    parser.add_argument('--base_url', type=str, default='', help='Base URL or IAedu endpoint')
     parser.add_argument('--judge_base_url', type=str, default='https://api.openai.com/v1', help='Base URL')
     parser.add_argument('--user_prompt', type=str, default='', help='user prompt')
     parser.add_argument('--judge_model_name', type=str, default='gpt-4o-mini', help='Judge model name')
+    parser.add_argument('--channel_id', type=str, default='', help='IAedu channel ID')
+    parser.add_argument('--thread_id', type=str, default='', help='IAedu thread ID')
+    parser.add_argument('--api_timeout', type=int, default=120, help='API timeout in seconds')
     
     args = parser.parse_args()
 

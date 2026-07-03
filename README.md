@@ -4,11 +4,11 @@ Projeto de demonstracao com tres modulos de raciocinio visual:
 
 - **LogicRAG**: usa uma base de conhecimento pre-computada do KITTI, traduz factos em First-Order Logic para linguagem natural e envia o contexto para um agente IAedu.
 - **LLaVA-SpaceSGG**: envia uma imagem real para a API IAedu e recebe uma descricao estruturada com objetos, caixas, relacoes espaciais, camadas de profundidade e perguntas/respostas comparativas.
-- **VisuLogic**: integra o codigo oficial de avaliacao do benchmark VisuLogic para testar raciocinio visual em modelos multimodais.
+- **VisuLogic**: integra o codigo oficial de avaliacao do benchmark VisuLogic e envia imagem + pergunta para a API IAedu ou para um modelo local via Ollama.
 
-Os fluxos LogicRAG e LLaVA-SpaceSGG podem correr de duas formas, escolhidas pela variavel `LLM_BACKEND`:
+Os fluxos LogicRAG, LLaVA-SpaceSGG e VisuLogic podem correr de duas formas:
 
-- `iaedu` (predefinicao): envia o pedido para a API IAedu na nuvem.
+- `iaedu`: envia o pedido para a API IAedu na nuvem.
 - `ollama`: corre um modelo local atraves do Ollama (`llama3` para texto, `llava` para visao), sem internet nem chave de API.
 
 O objetivo do repositorio e deixar um fluxo reproduzivel para demonstracao, screenshots e apresentacao.
@@ -32,6 +32,8 @@ O objetivo do repositorio e deixar um fluxo reproduzivel para demonstracao, scre
 |   +-- README.md
 |   +-- resultados/
 |   +-- VisuLogic-Eval/
+|       +-- models/iaedu_api.py
+|       +-- models/ollama_vision.py
 +-- .gitignore
 ```
 
@@ -65,11 +67,21 @@ IAEDU_CHANNEL_ID=colocar_o_channel_id
 IAEDU_THREAD_ID=colocar_um_thread_id
 ```
 
+Criar tambem um ficheiro `.env` dentro de `VisuLogic/`:
+
+```env
+OPENAI_API_KEY=colocar_a_chave_iaedu
+OPENAI_API_ENDPOINT=colocar_o_endpoint_stream_iaedu
+IAEDU_CHANNEL_ID=colocar_o_channel_id
+IAEDU_THREAD_ID=colocar_um_thread_id
+```
+
 Para confirmar que os ficheiros existem sem mostrar as chaves:
 
 ```powershell
 Get-Content .\LogicRAG\.env | ForEach-Object { ($_ -split '=')[0] + '=***' }
 Get-Content .\LLaVA-SpaceSGG\.env | ForEach-Object { ($_ -split '=')[0] + '=***' }
+Get-Content .\VisuLogic\.env | ForEach-Object { ($_ -split '=')[0] + '=***' }
 ```
 
 ## Preparar Ambiente
@@ -176,7 +188,7 @@ Resultado esperado:
 
 ## Demo 3 (Alternativa): Inferencia Local com Ollama
 
-Em vez da nuvem IAedu, os dois fluxos podem correr com modelos locais via Ollama. Util para demonstrar sem internet nem chave de API.
+Em vez da nuvem IAedu, os fluxos podem correr com modelos locais via Ollama. Util para demonstrar sem internet nem chave de API.
 
 Preparar o Ollama (uma vez):
 
@@ -214,7 +226,7 @@ VisuLogic/
 
 Este modulo usa o codigo oficial de avaliacao do benchmark VisuLogic. O dataset completo e os outputs locais nao devem ser enviados para o GitHub.
 
-Tambem foi acrescentado um adaptador `ollama:llava`, permitindo avaliar o benchmark com o modelo multimodal local do Ollama.
+Foi acrescentado um adaptador `iaedu`, usando as mesmas variaveis da API IAedu dos outros modulos. Tambem foi mantido o adaptador `ollama:llava`, permitindo avaliar o benchmark com o modelo multimodal local do Ollama.
 
 Preparar ambiente:
 
@@ -228,7 +240,7 @@ python -m pip install -r requirements.txt
 Testes rapidos:
 
 ```powershell
-python -m py_compile .\evaluation\eval_model.py .\models\__init__.py
+python -m py_compile .\evaluation\eval_model.py .\models\__init__.py .\models\iaedu_api.py
 python .\evaluation\eval_model.py --help
 ```
 
@@ -238,6 +250,12 @@ Exemplo de avaliacao local com Ollama:
 $env:OLLAMA_TIMEOUT="900"
 python .\evaluation\eval_model.py --input_file .\data.jsonl --output_file .\outputs\ollama_llava_visulogic.jsonl --model_path ollama:llava --base_url "http://localhost:11434/api/generate"
 Remove-Item Env:\OLLAMA_TIMEOUT
+```
+
+Exemplo de avaliacao com IAedu:
+
+```powershell
+python .\evaluation\eval_model.py --input_file .\data.jsonl --output_file .\outputs\iaedu_visulogic.jsonl --model_path iaedu --api_timeout 180
 ```
 
 Ver instrucoes completas em:
