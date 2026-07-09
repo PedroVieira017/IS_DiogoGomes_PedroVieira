@@ -1,0 +1,33 @@
+{
+    "imagem": "LLaVA-SpaceSGG/images_real/primeira_imagem.png",
+    "backend": "iaedu",
+    "timestamp": "2026-07-09T19:26:37.256466",
+    "etapa1_llava_spacesgg": {
+        "scene_graph": "1. Close-up of a happy black-and-tan dog outdoors with its tongue out, grass and a pale vertical post in the background.\n\n2. Objects  \n<ref>dog head</ref><box>[[0, 0, 999, 999]]</box>  \n<ref>snout</ref><box>[[189, 245, 815, 708]]</box>  \n<ref>black nose</ref><box>[[385, 207, 695, 493]]</box>  \n<ref>pink tongue</ref><box>[[228, 532, 566, 965]]</box>  \n<ref>open mouth</ref><box>[[185, 427, 819, 785]]</box>  \n<ref>left eye</ref><box>[[255, 94, 409, 218]]</box>  \n<ref>right closed eye</ref><box>[[701, 107, 843, 247]]</box>  \n<ref>left ear</ref><box>[[24, 27, 350, 306]]</box>  \n<ref>right ear</ref><box>[[832, 181, 999, 511]]</box>  \n<ref>tan eyebrows</ref><box>[[241, 41, 839, 177]]</box>  \n<ref>tan muzzle fur</ref><box>[[112, 310, 858, 739]]</box>  \n<ref>grass background</ref><box>[[0, 0, 999, 999]]</box>  \n<ref>pale vertical post</ref><box>[[713, 0, 931, 297]]</box>  \n\n3. Spatial relations  \n<pred>black nose above pink tongue</pred>  \n<pred>pink tongue protrudes from open mouth</pred>  \n<pred>open mouth below snout</pred>  \n<pred>left eye left of black nose</pred>  \n<pred>right closed eye right of black nose</pred>  \n<pred>left ear left of dog head</pred>  \n<pred>right ear right of dog head</pred>  \n<pred>tan eyebrows above eyes</pred>  \n<pred>tan muzzle fur surrounds open mouth</pred>  \n<pred>dog head in front of grass background</pred>  \n<pred>pale vertical post behind dog head</pred>  \n\n4. Depth layers  \nClosest: pink tongue, black nose  \nMiddle: snout, open mouth, eyes, ears, dog head  \nFarthest: grass background, pale vertical post"
+    },
+    "etapa2_logicrag": {
+        "factos_usados": [
+            "black nose above pink tongue",
+            "pink tongue protrudes from open mouth",
+            "open mouth below snout",
+            "left eye left of black nose",
+            "right closed eye right of black nose",
+            "left ear left of dog head",
+            "right ear right of dog head",
+            "tan eyebrows above eyes",
+            "tan muzzle fur surrounds open mouth",
+            "dog head in front of grass background",
+            "pale vertical post behind dog head"
+        ],
+        "avaliacao": "SAFE\n\nThe scene shows a dog with an open mouth and tongue protruding, consistent with relaxed panting. No visible element suggests danger or a need for immediate attention."
+    },
+    "etapa3_muslr_logicam": {
+        "afirmacao": "The main subject of the image is in front of the background.",
+        "raciocinio": "(1) Relevant premises:\n- dog head in front of grass background\n- pale vertical post behind dog head\n\n(2) Reasoning type:\n- Spatial relation inference\n- Visual subject identification\n\n(3) Formal logical application:\n- The image’s main subject is the dog head.\n- Premise states: dog head is in front of grass background.\n- Therefore, the main subject is in front of the background.\n\nFINAL ANSWER: True",
+        "veredito": "True"
+    },
+    "etapa4_visulogic": {
+        "resposta": "B",
+        "opcao_final": "B"
+    }
+}
