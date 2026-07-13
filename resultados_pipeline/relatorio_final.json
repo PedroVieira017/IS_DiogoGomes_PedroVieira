@@ -1,34 +1,31 @@
 {
     "imagem": "LLaVA-SpaceSGG/images_real/transito.jpg",
     "backend": "iaedu",
-    "timestamp": "2026-07-10T18:05:16.231555",
+    "timestamp": "2026-07-11T17:55:47.678301",
     "etapa1_llava_spacesgg": {
-        "scene_graph": "1. Urban street at dusk with cars stopped in traffic, a pedestrian crossing, traffic lights, signs, wet road reflections, and tall city buildings.\n\n2. Objects  \n<ref>vehicle interior frame</ref><box>[[0, 0, 126, 999]]</box>  \n<ref>dashboard</ref><box>[[235, 737, 999, 999]]</box>  \n<ref>wet road</ref><box>[[286, 350, 999, 999]]</box>  \n<ref>white sedan</ref><box>[[0, 281, 350, 744]]</box>  \n<ref>silver sedan</ref><box>[[263, 314, 502, 557]]</box>  \n<ref>red SUV</ref><box>[[668, 217, 991, 637]]</box>  \n<ref>pedestrian</ref><box>[[511, 286, 604, 522]]</box>  \n<ref>crosswalk line</ref><box>[[521, 501, 704, 526]]</box>  \n<ref>white lane marking</ref><box>[[562, 484, 721, 999]]</box>  \n<ref>parking sign</ref><box>[[421, 151, 515, 267]]</box>  \n<ref>center traffic light</ref><box>[[489, 177, 518, 262]]</box>  \n<ref>right traffic light</ref><box>[[850, 142, 888, 218]]</box>  \n<ref>background vehicles</ref><box>[[604, 289, 692, 382]]</box>  \n<ref>left office building</ref><box>[[0, 0, 558, 322]]</box>  \n<ref>center high-rise building</ref><box>[[550, 0, 668, 277]]</box>  \n<ref>right buildings</ref><box>[[721, 0, 999, 333]]</box>  \n<ref>sky</ref><box>[[653, 0, 832, 142]]</box>\n\n3. Spatial relations  \n<pred>dashboard in front of wet road</pred>  \n<pred>vehicle interior frame left of white sedan</pred>  \n<pred>white sedan left of silver sedan</pred>  \n<pred>silver sedan left of pedestrian</pred>  \n<pred>pedestrian left of red SUV</pred>  \n<pred>pedestrian on crosswalk line</pred>  \n<pred>white lane marking between silver sedan and red SUV</pred>  \n<pred>red SUV right of white lane marking</pred>  \n<pred>parking sign above pedestrian</pred>  \n<pred>center traffic light right of parking sign</pred>  \n<pred>right traffic light above red SUV</pred>  \n<pred>background vehicles behind pedestrian</pred>  \n<pred>left office building behind white sedan</pred>  \n<pred>center high-rise building behind parking sign</pred>  \n<pred>right buildings behind red SUV</pred>  \n<pred>sky above buildings</pred>\n\n4. Depth layers  \nClosest: vehicle interior frame, dashboard  \nNear foreground: white sedan, red SUV, wet road  \nMidground: silver sedan, pedestrian, crosswalk line, lane marking  \nBackground: traffic lights, parking sign, background vehicles  \nFarthest: office buildings, high-rise buildings, sky"
+        "scene_graph": "1. Urban traffic scene at dusk with cars stopped at an intersection while a pedestrian crosses the wet street.\n\n2. Objects  \n<ref>white sedan</ref><box>[[34, 284, 348, 762]]</box>  \n<ref>silver sedan</ref><box>[[263, 314, 503, 585]]</box>  \n<ref>red SUV</ref><box>[[665, 215, 988, 608]]</box>  \n<ref>pedestrian crossing street</ref><box>[[510, 286, 591, 518]]</box>  \n<ref>backpack</ref><box>[[555, 320, 589, 383]]</box>  \n<ref>parking direction sign</ref><box>[[420, 151, 514, 267]]</box>  \n<ref>green traffic light</ref><box>[[493, 199, 514, 256]]</box>  \n<ref>red traffic light left</ref><box>[[271, 172, 294, 234]]</box>  \n<ref>red traffic light right</ref><box>[[866, 169, 889, 224]]</box>  \n<ref>wet road</ref><box>[[218, 442, 998, 999]]</box>  \n<ref>lane marking</ref><box>[[526, 493, 694, 893]]</box>  \n<ref>building facades</ref><box>[[0, 0, 999, 358]]</box>  \n<ref>bus stop or shelter</ref><box>[[568, 263, 658, 363]]</box>  \n<ref>distant traffic</ref><box>[[624, 292, 724, 389]]</box>  \n<ref>car interior foreground</ref><box>[[0, 666, 999, 999]]</box>  \n\n3. Spatial relations  \n<pred>white sedan left of silver sedan</pred>  \n<pred>silver sedan left of red SUV</pred>  \n<pred>pedestrian crossing street in front of silver sedan</pred>  \n<pred>pedestrian left of red SUV</pred>  \n<pred>backpack on pedestrian</pred>  \n<pred>parking direction sign above pedestrian</pred>  \n<pred>green traffic light beside parking direction sign</pred>  \n<pred>red traffic light right above red SUV</pred>  \n<pred>lane marking between silver sedan and red SUV</pred>  \n<pred>wet road below all vehicles</pred>  \n<pred>building facades behind vehicles</pred>  \n<pred>distant traffic behind pedestrian</pred>  \n<pred>car interior foreground in front of road</pred>  \n\n4. Depth layers  \nClosest: car interior foreground, white sedan, red SUV  \nMiddle: silver sedan, wet road, lane marking, pedestrian, backpack  \nFarther: traffic lights, parking direction sign, bus stop or shelter, distant traffic  \nFarthest: building facades, sky/background city blocks"
     },
     "etapa2_logicrag": {
         "factos_usados": [
-            "dashboard in front of wet road",
-            "vehicle interior frame left of white sedan",
             "white sedan left of silver sedan",
-            "silver sedan left of pedestrian",
+            "silver sedan left of red SUV",
+            "pedestrian crossing street in front of silver sedan",
             "pedestrian left of red SUV",
-            "pedestrian on crosswalk line",
-            "white lane marking between silver sedan and red SUV",
-            "red SUV right of white lane marking",
-            "parking sign above pedestrian",
-            "center traffic light right of parking sign",
-            "right traffic light above red SUV",
-            "background vehicles behind pedestrian",
-            "left office building behind white sedan",
-            "center high-rise building behind parking sign",
-            "right buildings behind red SUV",
-            "sky above buildings"
+            "backpack on pedestrian",
+            "parking direction sign above pedestrian",
+            "green traffic light beside parking direction sign",
+            "red traffic light right above red SUV",
+            "lane marking between silver sedan and red SUV",
+            "wet road below all vehicles",
+            "building facades behind vehicles",
+            "distant traffic behind pedestrian",
+            "car interior foreground in front of road"
         ],
-        "avaliacao": "ALERT\n\nA pedestrian is on the crosswalk line between nearby vehicles, directly in the driving environment. The wet road and stopped/queued traffic increase the need for immediate attention and caution."
+        "avaliacao": "ALERT\n\nA pedestrian is actively crossing in front of nearby traffic, directly ahead of the silver sedan. The wet road and mixed traffic lights increase stopping risk, so immediate attention is required."
     },
     "etapa3_muslr_logicam": {
         "afirmacao": "The main subject of the image is in front of the background.",
-        "raciocinio": "(1) Relevant premises selected:\n\n- pedestrian on crosswalk line  \n- background vehicles behind pedestrian  \n- center high-rise building behind parking sign  \n- left office building behind white sedan  \n- right buildings behind red SUV  \n- sky above buildings  \n\nFrom the image, the visually central/main subject is the pedestrian crossing the road.\n\n(2) Reasoning type:\n\nSpatial relation reasoning, specifically depth/front-background reasoning.\n\n(3) Formal logical application:\n\nLet:\n\n- Main subject = pedestrian\n- Background = background vehicles/buildings/sky region\n\nPremise:\n\n$$\n\\text{behind}(\\text{background vehicles}, \\text{pedestrian})\n$$\n\nThe spatial inverse rule is:\n\n$$\n\\text{behind}(A, B) \\Rightarrow \\text{in\\_front\\_of}(B, A)\n$$\n\nApply the rule:\n\n$$\n\\text{behind}(\\text{background vehicles}, \\text{pedestrian})\n\\Rightarrow\n\\text{in\\_front\\_of}(\\text{pedestrian}, \\text{background vehicles})\n$$\n\nSince the pedestrian is the main subject, we conclude:\n\n$$\n\\text{in\\_front\\_of}(\\text{main subject}, \\text{background})\n$$\n\nThe statement is valid.\n\nFINAL ANSWER: True",
+        "raciocinio": "1. Relevant premises selected:\n- pedestrian crossing street in front of silver sedan\n- pedestrian left of red SUV\n- distant traffic behind pedestrian\n- building facades behind vehicles\n- car interior foreground in front of road\n\n2. Reasoning type:\n- Spatial/depth reasoning using foreground–subject–background relations.\n\n3. Formal logical application:\n- The pedestrian is visually the central/main subject of the image.\n- A premise states that distant traffic is behind the pedestrian.\n- Building facades are also behind the vehicles, functioning as background elements.\n- If an object is in front of background elements, then the statement “the main subject is in front of the background” is true.\n- Since the main subject is the pedestrian, and the background elements are behind the pedestrian, the statement is valid.\n\nFINAL ANSWER: True",
         "veredito": "True"
     },
     "etapa4_visulogic": {
