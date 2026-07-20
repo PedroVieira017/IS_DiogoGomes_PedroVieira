@@ -45,3 +45,14 @@ MuSLR/MuSLR-Code/data/
 MuSLR/MuSLR-Code/results/
 MuSLR/resultados/*
 !MuSLR/resultados/.gitkeep
+
+# Dataset oficial MuSLR/LogiCAM (descarregado localmente)
+MuSLR/MuSLR-Dataset/
+
+# Manter evidencias de Pedro Vieira
+!MuSLR/resultados/pedro_*.json
+!MuSLR/resultados/pedro_*.txt
+
+# MMMU-Pro não faz parte do artigo pedido
+MMMU/mmmu-pro/
+MMMU/mmmu-pro.png

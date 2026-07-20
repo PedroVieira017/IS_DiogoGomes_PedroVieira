@@ -1,0 +1,57 @@
+[
+  {
+    "id": "validation_Accounting_1",
+    "subject": "Accounting",
+    "split": "validation",
+    "question_type": "multiple-choice",
+    "question": "<image 1> Baxter Company has a relevant range of production between 15,000 and 30,000 units. The following cost data represents average variable costs per unit for 25,000 units of production. If 30,000 units are produced, what are the per unit manufacturing overhead costs incurred?",
+    "options": [
+      "$6",
+      "$7",
+      "$8",
+      "$9"
+    ],
+    "prediction": "B",
+    "ground_truth": "B",
+    "correct": true,
+    "raw_response": "B",
+    "image_path": "C:\\Users\\Master\\Desktop\\IS_moreDiogoGomes\\2025-LMM-LogicRag-Visual\\IS_DiogoGomes_PedroVieira\\MMMU\\resultados\\images\\validation_Accounting_1.png",
+    "error": null
+  },
+  {
+    "id": "validation_Accounting_2",
+    "subject": "Accounting",
+    "split": "validation",
+    "question_type": "multiple-choice",
+    "question": "Assume accounts have normal balances, solve for the one missing account balance: Dividends. Equipment was recently purchased, so there is neither depreciation expense nor accumulated depreciation. <image 1>",
+    "options": [
+      "$194,815",
+      "$182,815",
+      "$12,000",
+      "$9,000"
+    ],
+    "prediction": "C",
+    "ground_truth": "C",
+    "correct": true,
+    "raw_response": "C",
+    "image_path": "C:\\Users\\Master\\Desktop\\IS_moreDiogoGomes\\2025-LMM-LogicRag-Visual\\IS_DiogoGomes_PedroVieira\\MMMU\\resultados\\images\\validation_Accounting_2.png",
+    "error": null
+  },
+  {
+    "id": "validation_Accounting_3",
+    "subject": "Accounting",
+    "split": "validation",
+    "question_type": "multiple-choice",
+    "question": "Maxwell Software, Inc., has the following mutually exclusive projects.Suppose the company uses the NPV rule to rank these two projects.<image 1> Which project should be chosen if the appropriate discount rate is 15 percent?",
+    "options": [
+      "Project A",
+      "Project B"
+    ],
+    "prediction": "B",
+    "ground_truth": "B",
+    "correct": true,
+    "raw_response": "B",
+    "image_path": "C:\\Users\\Master\\Desktop\\IS_moreDiogoGomes\\2025-LMM-LogicRag-Visual\\IS_DiogoGomes_PedroVieira\\MMMU\\resultados\\images\\validation_Accounting_3.png",
+    "error": null
+  }
+]

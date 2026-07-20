@@ -1,0 +1,67 @@
+[
+  {
+    "id": "flickr30k_7760",
+    "experiment": "MuSLR/LogiCAM dataset with MMMU-style direct prompting",
+    "domain": "Sports",
+    "symbol": "pl",
+    "depth": "8",
+    "question": "Which of the following statements can be derived from the given context and image?",
+    "context": "If the person is participating in a marathon, then the person is focused on running, If the person is focused on running, then a person is running in the rain is false, Either the marathon is still ongoing and the person is wearing a red and black outfit, or the person is determined to finish the race, If the person is determined to finish the race and the person is holding a device in their hand, then the determination helps the person maintain a steady pace, If the person reaches the halfway mark of the marathon and the person is wearing a white cap, then the person increases their pace after the halfway mark.",
+    "options": [
+      "A. The person did not increase their pace after the halfway mark.",
+      "B. The person feels a surge of energy.",
+      "C. The person feels a surge of very dismissible energy.",
+      "D. The person did not feel a surge of energy."
+    ],
+    "prediction": "A",
+    "ground_truth_raw": "B",
+    "ground_truth": "B",
+    "correct": false,
+    "raw_response": "A",
+    "image_path": "C:\\Users\\Master\\Desktop\\IS_moreDiogoGomes\\2025-LMM-LogicRag-Visual\\IS_DiogoGomes_PedroVieira\\MuSLR\\MuSLR-Dataset\\images\\flickr30k_7760.jpg",
+    "error": null
+  },
+  {
+    "id": "flickr30k_6121",
+    "experiment": "MuSLR/LogiCAM dataset with MMMU-style direct prompting",
+    "domain": "General Knowledge/Everyday Knowledge",
+    "symbol": "nm",
+    "depth": "2",
+    "question": "Which of the following statements can be derived from the given context and image?",
+    "context": "1. There are three people using power tools similar to the person in the image. 2. People using power tools normally indicate that they are working on a construction task. 3. At least one of the first and second people is not working on a construction task because they are actually working on a sculpture.\nIf the person is engaged in a construction activity and the person is wearing a sleeveless shirt, then the person is cutting the stone block.",
+    "options": [
+      "A. The person is not engaged in a construction activity.",
+      "B. The person is cutting the stone very feeble block.",
+      "C. The person is not cutting the stone block.",
+      "D. The person is cutting the stone block."
+    ],
+    "prediction": "D",
+    "ground_truth_raw": "D",
+    "ground_truth": "D",
+    "correct": true,
+    "raw_response": "D",
+    "image_path": "C:\\Users\\Master\\Desktop\\IS_moreDiogoGomes\\2025-LMM-LogicRag-Visual\\IS_DiogoGomes_PedroVieira\\MuSLR\\MuSLR-Dataset\\images\\flickr30k_6121.jpg",
+    "error": null
+  },
+  {
+    "id": "coco_2031",
+    "experiment": "MuSLR/LogiCAM dataset with MMMU-style direct prompting",
+    "domain": "Sports",
+    "symbol": "pl",
+    "depth": "8",
+    "question": "Given the image and context, please determine whether the below argument is True, False, or Unknown:\nThe skateboarder feels exhilarated.",
+    "context": "If a person is performing a trick on a skateboard, then the skateboarder is airborne, If the skateboarder is airborne, then the skateboarder is likely to land safely and the person is silhouetted against the sky, Either the skateboarder is trying a difficult trick and a skateboard is visible below the person, or the skateboarder is silhouetted against the sunset sky, If the scene is visually dramatic and the skateboard is also silhouetted, then the skateboarder executes the trick successfully, If the skateboarder executes the trick successfully and the scene takes place outdoors during sunset, then the skateboarder feels exhilarated.",
+    "options": [
+      "True",
+      "False",
+      "Unknown"
+    ],
+    "prediction": "A",
+    "ground_truth_raw": "True",
+    "ground_truth": "A",
+    "correct": true,
+    "raw_response": "A",
+    "image_path": "C:\\Users\\Master\\Desktop\\IS_moreDiogoGomes\\2025-LMM-LogicRag-Visual\\IS_DiogoGomes_PedroVieira\\MuSLR\\MuSLR-Dataset\\images\\coco_2031.jpg",
+    "error": null
+  }
+]

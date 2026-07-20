@@ -1,0 +1,60 @@
+[
+  {
+    "id": "validation_Accounting_1",
+    "experiment": "MMMU dataset with LogiCAM-style reasoning",
+    "subject": "Accounting",
+    "split": "validation",
+    "question_type": "multiple-choice",
+    "question": "<image 1> Baxter Company has a relevant range of production between 15,000 and 30,000 units. The following cost data represents average variable costs per unit for 25,000 units of production. If 30,000 units are produced, what are the per unit manufacturing overhead costs incurred?",
+    "options": [
+      "$6",
+      "$7",
+      "$8",
+      "$9"
+    ],
+    "prediction": "B",
+    "ground_truth": "B",
+    "correct": true,
+    "logicam_reasoning": "### 1. Premise Selection\n\nRelevant premises:\n\n- Baxter’s relevant range is 15,000 to 30,000 units.\n- The cost data are based on 25,000 units.\n- At 25,000 units:\n  - Fixed manufacturing overhead = $6 per unit\n  - Variable manufacturing overhead = $2 per unit\n- Production changes to 30,000 units.\n\n### 2. Reasoning Type Identification\n\nThis requires **quantitative accounting reasoning**, specifically cost behavior within the relevant range.\n\n### 3. Structured Reasoning\n\nFixed manufacturing overhead per unit changes when production volume changes, because total fixed cost stays the same within the relevant range.\n\nAt 25,000 units:\n\n$$\n\\text{Total fixed manufacturing overhead} = 25{,}000 \\times 6 = 150{,}000\n$$\n\nAt 30,000 units:\n\n$$\n\\text{Fixed manufacturing overhead per unit} = \\frac{150{,}000}{30{,}000} = 5\n$$\n\nVariable manufacturing overhead remains $2 per unit.\n\nSo total manufacturing overhead per unit is:\n\n$$\n5 + 2 = 7\n$$\n\n### 4. Conclusion\n\nFINAL ANSWER: B",
+    "image_path": "C:\\Users\\Master\\Desktop\\IS_moreDiogoGomes\\2025-LMM-LogicRag-Visual\\IS_DiogoGomes_PedroVieira\\MuSLR\\resultados\\mmmu_images\\validation_Accounting_1.png",
+    "error": null
+  },
+  {
+    "id": "validation_Accounting_2",
+    "experiment": "MMMU dataset with LogiCAM-style reasoning",
+    "subject": "Accounting",
+    "split": "validation",
+    "question_type": "multiple-choice",
+    "question": "Assume accounts have normal balances, solve for the one missing account balance: Dividends. Equipment was recently purchased, so there is neither depreciation expense nor accumulated depreciation. <image 1>",
+    "options": [
+      "$194,815",
+      "$182,815",
+      "$12,000",
+      "$9,000"
+    ],
+    "prediction": "C",
+    "ground_truth": "C",
+    "correct": true,
+    "logicam_reasoning": "## 1. Premise Selection\n\nRelevant premises from the image and question:\n\n- Accounts have normal balances.\n- Dividends is the missing balance.\n- Equipment was recently purchased, so no depreciation expense or accumulated depreciation is included.\n- Debit-normal accounts shown:\n  - Accounts receivable: $16,032\n  - Cash: $20,450\n  - Equipment: $29,000\n  - Prepaid insurance: $9,444\n  - Land: $34,000\n  - Insurance expense: $12,689\n  - Supplies: $9,700\n  - Salaries expense: $51,500\n  - Dividends: unknown\n- Credit-normal accounts shown:\n  - Accounts payable: $9,000\n  - Common stock: $24,000\n  - Notes payable: $48,000\n  - Retained earnings: $31,315\n  - Service revenue: $82,500\n\n## 2. Reasoning Type Identification\n\nThis requires **quantitative accounting reasoning**, using normal account balances and the equality of total debits and total credits.\n\n## 3. Structured Reasoning\n\nTotal credits:\n\n$$\n9{,}000 + 24{,}000 + 48{,}000 + 31{,}315 + 82{,}500 = 194{,}815\n$$\n\nTotal known debits, excluding Dividends:\n\n$$\n16{,}032 + 20{,}450 + 29{,}000 + 9{,}444 + 34{,}000 + 12{,}689 + 9{,}700 + 51{,}500 = 182{,}815\n$$\n\nSince debits must equal credits:\n\n$$\n182{,}815 + \\text{Dividends} = 194{,}815\n$$\n\nSolve for Dividends:\n\n$$\n\\text{Dividends} = 194{,}815 - 182{,}815 = 12{,}000\n$$\n\n## 4. Conclusion\n\nThe missing Dividends balance is **$12,000**, which corresponds to option **C**.\n\nFINAL ANSWER: C",
+    "image_path": "C:\\Users\\Master\\Desktop\\IS_moreDiogoGomes\\2025-LMM-LogicRag-Visual\\IS_DiogoGomes_PedroVieira\\MuSLR\\resultados\\mmmu_images\\validation_Accounting_2.png",
+    "error": null
+  },
+  {
+    "id": "validation_Accounting_3",
+    "experiment": "MMMU dataset with LogiCAM-style reasoning",
+    "subject": "Accounting",
+    "split": "validation",
+    "question_type": "multiple-choice",
+    "question": "Maxwell Software, Inc., has the following mutually exclusive projects.Suppose the company uses the NPV rule to rank these two projects.<image 1> Which project should be chosen if the appropriate discount rate is 15 percent?",
+    "options": [
+      "Project A",
+      "Project B"
+    ],
+    "prediction": "B",
+    "ground_truth": "B",
+    "correct": true,
+    "logicam_reasoning": "## 1. Premise Selection\n\nRelevant premises:\n\n- Maxwell Software has two mutually exclusive projects.\n- The company uses the NPV rule.\n- Appropriate discount rate: 15 percent.\n- Cash flows from the image:\n\n| Year | Project A | Project B |\n|---:|---:|---:|\n| 0 | -$20,000 | -$24,000 |\n| 1 | $13,200 | $14,100 |\n| 2 | $8,300 | $9,800 |\n| 3 | $3,200 | $7,600 |\n\n## 2. Reasoning Type Identification\n\nThis requires quantitative financial reasoning, specifically Net Present Value comparison.\n\n## 3. Structured Reasoning\n\nUse the NPV formula:\n\n$$\nNPV = C_0 + \\frac{C_1}{1+r} + \\frac{C_2}{(1+r)^2} + \\frac{C_3}{(1+r)^3}\n$$\n\nwhere:\n\n$$\nr = 0.15\n$$\n\nFor Project A:\n\n$$\nNPV_A = -20000 + \\frac{13200}{1.15} + \\frac{8300}{1.15^2} + \\frac{3200}{1.15^3}\n$$\n\n$$\nNPV_A \\approx -20000 + 11478.26 + 6275.99 + 2104.05\n$$\n\n$$\nNPV_A \\approx -141.69\n$$\n\nFor Project B:\n\n$$\nNPV_B = -24000 + \\frac{14100}{1.15} + \\frac{9800}{1.15^2} + \\frac{7600}{1.15^3}\n$$\n\n$$\nNPV_B \\approx -24000 + 12260.87 + 7410.21 + 4997.12\n$$\n\n$$\nNPV_B \\approx 668.20\n$$\n\nSince Project B has the higher NPV, it should be selected.\n\n## 4. Conclusion\n\nFINAL ANSWER: B",
+    "image_path": "C:\\Users\\Master\\Desktop\\IS_moreDiogoGomes\\2025-LMM-LogicRag-Visual\\IS_DiogoGomes_PedroVieira\\MuSLR\\resultados\\mmmu_images\\validation_Accounting_3.png",
+    "error": null
+  }
+]
