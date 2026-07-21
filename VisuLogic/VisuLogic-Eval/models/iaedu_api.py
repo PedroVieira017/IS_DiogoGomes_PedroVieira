@@ -157,11 +157,18 @@ class IAeduAPIModel(BaseModel):
         if not image_path.exists():
             raise FileNotFoundError(f"Image not found: {image_path}")
 
-        prompt = (
-            f"{question}\n\n"
-            f"{self.user_prompt}\n\n"
-            "Answer with only one final option: A, B, C, or D."
-        )
+        if input_data.get("response_mode") == "free":
+            instructions = self.user_prompt or (
+                "Answer clearly and concisely using the evidence visible in the image. "
+                "If the image does not contain enough evidence, say so."
+            )
+            prompt = f"{question}\n\n{instructions}"
+        else:
+            prompt = (
+                f"{question}\n\n"
+                f"{self.user_prompt}\n\n"
+                "Answer with only one final option: A, B, C, or D."
+            )
 
         return self._call_iaedu(prompt, image_path)
 
@@ -172,7 +179,10 @@ class IAeduAPIModel(BaseModel):
             "message": message,
             "thread_id": item_thread_id,
             "channel_id": self.channel_id,
-            "user_info": json.dumps({"name": "VisuLogic"}, ensure_ascii=False),
+            "user_info": json.dumps(
+    {"name": "Pedro Vieira", "project": "VisuLogic"},
+    ensure_ascii=False,
+),
         }
         body, boundary = _encode_multipart_form(form, files={"files": image_path})
         request = urllib.request.Request(

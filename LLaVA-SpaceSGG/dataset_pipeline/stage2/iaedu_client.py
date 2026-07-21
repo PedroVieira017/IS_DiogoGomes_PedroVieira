@@ -137,7 +137,10 @@ def call_iaedu(message, channel_id, thread_id, user_info=None, endpoint=None, ap
         "message": message,
         "thread_id": thread_id,
         "channel_id": channel_id,
-        "user_info": json.dumps(user_info or {"name": "Diogo"}, ensure_ascii=False),
+        "user_info": json.dumps(
+    user_info or {"name": "Pedro Vieira"},
+    ensure_ascii=False,
+),
     }
     files = {"files": image_path} if image_path else None
     body, boundary = _encode_multipart_form(form, files=files)

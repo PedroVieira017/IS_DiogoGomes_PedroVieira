@@ -1,0 +1,7 @@
+{
+    "id": "coco_6860",
+    "backend": "iaedu",
+    "question": "Given the image and context, please determine whether the below argument is True, False, or Unknown:\nThe person is not preparing to hit the ball.",
+    "gold_answer": "False",
+    "model_answer": "1. **Relevant premises from the image**\n\nLet:\n\n$$\nS = \\text{The person is swinging a baseball bat}\n$$\n\n$$\nG = \\text{The person is participating in a baseball game}\n$$\n\n$$\nP = \\text{The person is preparing to hit the ball}\n$$\n\nFrom the image, the person is wearing baseball gear and holding/swinging a bat in a batting position. So:\n\n$$\nS\n$$\n\nThe image also supports that the person is preparing to hit or attempting to hit the ball:\n\n$$\nP\n$$\n\n2. **Premise from the context**\n\nThe context says: “Either a person is swinging a baseball bat is false, or the person is participating in a baseball game.”\n\nSymbolically:\n\n$$\n\\neg S \\lor G\n$$\n\nThis is equivalent to:\n\n$$\nS \\rightarrow G\n$$\n\n3. **Reasoning type**\n\nUse **Disjunctive Syllogism** / **Modus Ponens**:\n\nGiven:\n\n$$\n\\neg S \\lor G\n$$\n\nand:\n\n$$\nS\n$$\n\nTherefore:\n\n$$\nG\n$$\n\nSo the person is participating in a baseball game.\n\n4. **Evaluate the argument**\n\nThe argument claims:\n\n$$\n\\neg P\n$$\n\nBut the image supports:\n\n$$\nP\n$$\n\nSince:\n\n$$\nP\n$$\n\nis true, the claim:\n\n$$\n\\neg P\n$$\n\nis false.\n\nFINAL ANSWER: False"
+}

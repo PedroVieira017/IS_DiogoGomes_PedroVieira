@@ -1,107 +1,137 @@
-# Integração MMMU e testes cruzados com LogiCAM
+# Execução dos benchmarks e testes cruzados
 
-**Execução e integração:** Pedro Vieira  
-**Data:** 20 de julho de 2026  
+**Execução e integração:** Pedro Vieira
+**Data:** 21 de julho de 2026
 **Branch:** `mmmu`
 
 ## 1. Objetivo
 
-Esta implementação integra o benchmark oficial MMMU no projeto e realiza os dois testes cruzados pedidos:
+Este trabalho executa e valida as implementações MMMU, LogicRAG, VisuLogic e MuSLR/LogiCAM, comparando os resultados possíveis com os valores publicados.
 
-1. Executar o dataset MuSLR/LogiCAM através da implementação MMMU.
-2. Executar o dataset MMMU através do método de raciocínio LogiCAM.
+Também realiza os dois testes cruzados pedidos:
 
-## 2. Fontes oficiais
+1. Dataset MuSLR/LogiCAM executado através do fluxo MMMU.
+2. Dataset MMMU executado através do fluxo LogiCAM.
 
-### MMMU
+## 2. Identificação
 
-- Artigo: *MMMU: A Massive Multi-discipline Multimodal Understanding and Reasoning Benchmark for Expert AGI*
-- Código: https://github.com/MMMU-Benchmark/MMMU
-- Dataset: https://huggingface.co/datasets/MMMU/MMMU
+Os pedidos enviados à IAedu identificam explicitamente:
 
-### MuSLR / LogiCAM
+```json
+{
+  "name": "Pedro Vieira"
+}
+```
 
-- Artigo: *Multimodal Symbolic Logical Reasoning*
-- Código: https://github.com/Aiden0526/MuSLR
-- Dataset: https://huggingface.co/datasets/Aiden0526/MuSLR
+A identificação foi corrigida nos clientes e integrações utilizados.
 
 ## 3. Ambiente
 
-Foi criado o ambiente Conda `mmmu` com Python 3.10.20.
+Foi utilizado o ambiente Conda `mmmu`, com Python 3.10.20.
 
-Dependências principais:
+A máquina possui aproximadamente 16 GB de RAM e não possui GPU NVIDIA. Por esse motivo, não foi possível gerar novamente todas as previsões com os modelos originais de grande dimensão.
 
-- `datasets`
-- `Pillow`
-- `numpy`
-- `pyyaml`
-- `requests`
-- `python-dotenv`
-- `openai`
-- `tabulate`
-- `tqdm`
+A IAedu foi utilizada como backend multimodal nas experiências controladas.
 
-Não foi detetada uma GPU NVIDIA. Por esse motivo, não foi possível gerar novamente as previsões com o modelo LLaVA-1.5-13B. Foi utilizada a API IAedu como backend multimodal, seguindo o método das restantes integrações do projeto.
+## 4. Datasets oficiais
 
-## 4. Ficheiros implementados
+### MMMU
 
-- `MMMU/run_iaedu_mmmu.py`: executa perguntas oficiais do MMMU através da IAedu.
-- `MMMU/run_muslr_with_mmmu.py`: executa o dataset MuSLR com prompting direto no estilo MMMU.
-- `MuSLR/run_mmmu_with_logicam.py`: executa perguntas MMMU com raciocínio inspirado no LogiCAM.
-- `MMMU/resultados/`: contém previsões, detalhes e logs de execução.
-- `MuSLR/resultados/pedro_*`: contém as evidências do teste MMMU com LogiCAM.
+- Validação: 900 perguntas.
+- 30 disciplinas.
+- Dataset obtido através do Hugging Face.
 
-## 5. Dataset MuSLR
+### VisuLogic
 
-O dataset oficial MuSLR foi descarregado do Hugging Face.
+- 1.000 perguntas oficiais.
+- 1.000 imagens oficiais.
+- As 1.000 correspondências entre perguntas e imagens foram verificadas.
 
-Verificação local:
+### MuSLR
 
-- Registos no `metadata.csv`: 1.093
-- Imagens: 1.091
+- 1.093 registos no `metadata.csv`.
+- 1.091 imagens.
+- Inclui escolha múltipla e avaliação `True/False/Unknown`.
 
-O dataset está excluído do Git através da regra `MuSLR/MuSLR-Dataset/`.
+## 5. Reprodução do MMMU
 
-## 6. Validação do avaliador oficial MMMU
+O avaliador oficial foi executado sobre as previsões LLaVA-1.5-13B fornecidas pelos autores:
 
-O avaliador oficial foi executado com as previsões LLaVA-1.5-13B disponibilizadas pelos autores.
-
-Comando principal:
-
-`python main_eval_only.py --output_path example_outputs/llava1.5_13b/total_val_output.json --answer_path answer_dict_val.json`
+```powershell
+python .\main_eval_only.py `
+  --output_path .\example_outputs\llava1.5_13b\total_val_output.json `
+  --answer_path .\answer_dict_val.json
+```
 
 Resultado:
 
-| Avaliação | Exemplos | Accuracy |
+| Origem | Exemplos | Accuracy |
 |---|---:|---:|
-| Previsões LLaVA incluídas no repositório oficial | 900 | 36,7% |
+| Artigo/leaderboard, LLaVA-1.5-13B | 900 | 36,4% |
+| Avaliação local das previsões fornecidas | 900 | 36,7% |
 
-Este teste confirma que o avaliador oficial funciona no ambiente utilizado. As previsões foram fornecidas pelos autores e não foram geradas novamente neste computador.
+A diferença é de 0,3 pontos percentuais. O resultado é próximo, mas não exatamente igual. As previsões avaliadas foram fornecidas pelos autores e não foram novamente geradas nesta máquina.
 
-## 7. MMMU executado através da IAedu
+## 6. Reprodução do LogicRAG
 
-Foram executados três exemplos da categoria `Accounting`, do conjunto `validation`.
+Foi executado o código oficial sobre a knowledge base e trajetórias KITTI pré-calculadas:
 
-Resultado:
+```powershell
+python .\inference_in_kb.py `
+  --csv ..\kitti_questions\kitti_que.csv `
+  --fol_trans_csv .\translated_queries\question_query_kitti_llama33.csv `
+  --kb_dir ..\..\LogicRAG_Data\precomputed_knowledge_base\kb_out_kitti `
+  --tracker_dir ..\..\LogicRAG_Data\tracker_trajectories\track_out_kitti `
+  --output ..\..\resultados\pedro_logicrag_kitti.csv
+```
 
-| Dataset | Categoria | Exemplos | Corretos | Accuracy |
-|---|---|---:|---:|---:|
-| MMMU validation | Accounting | 3 | 3 | 100% |
+Resultados:
 
-O resultado foi confirmado pelo avaliador oficial:
+| Métrica | Artigo | Execução local |
+|---|---:|---:|
+| Accuracy | 0,91 | 0,94 |
+| F1 | 0,95 | 0,97 |
 
-- `Accounting`: 3 exemplos, accuracy 1.0
-- `Overall`: 3 exemplos, accuracy 1.0
+O artigo descreve 100 perguntas, enquanto o ficheiro atualmente disponibilizado pelo repositório contém 101. Os valores locais são superiores, mas não reproduzem exatamente os valores publicados.
 
-## 8. Teste cruzado MuSLR/LogiCAM para MMMU
+## 7. VisuLogic
 
-Neste teste, exemplos oficiais do MuSLR foram processados através de prompting direto de escolha múltipla no estilo MMMU.
+O dataset oficial completo foi descarregado e validado:
 
-Resultado:
+- Perguntas: 1.000
+- Imagens oficiais referenciadas: 1.000
+- Imagens em falta: 0
 
-| Dataset de entrada | Método | Exemplos | Corretos | Accuracy |
-|---|---|---:|---:|---:|
-| MuSLR/LogiCAM | MMMU-style direct prompting | 3 | 2 | 66,7% |
+Foi executada uma amostra de cinco perguntas, abrangendo cinco categorias diferentes, através da IAedu.
+
+| Exemplos | Corretos | Accuracy |
+|---:|---:|---:|
+| 5 | 3 | 60,0% |
+
+Resultados individuais:
+
+| ID | Previsão | Correta | Resultado |
+|---|---:|---:|---|
+| `00000` | C | A | Errado |
+| `00001` | D | D | Correto |
+| `00002` | C | C | Correto |
+| `00003` | C | B | Errado |
+| `00004` | D | D | Correto |
+
+Este resultado não é diretamente comparável com a tabela do artigo, porque foi utilizado o backend IAedu e não um dos modelos originais avaliados no artigo.
+
+## 8. MuSLR com fluxo LogiCAM
+
+Foi executada uma amostra de cinco exemplos oficiais do MuSLR com o fluxo integrado LogiCAM:
+
+1. seleção de premissas;
+2. identificação do tipo de raciocínio;
+3. aplicação das regras lógicas;
+4. geração da resposta final.
+
+| Exemplos | Corretos | Accuracy |
+|---:|---:|---:|
+| 5 | 3 | 60,0% |
 
 Resultados individuais:
 
@@ -109,61 +139,90 @@ Resultados individuais:
 |---|---:|---:|---|
 | `flickr30k_7760` | A | B | Errado |
 | `flickr30k_6121` | D | D | Correto |
-| `coco_2031` | A | A (`True`) | Correto |
+| `coco_2031` | True | True | Correto |
+| `coco_6860` | False | False | Correto |
+| `rvl_652` | Unknown | True | Errado |
 
-O adaptador suporta os dois tipos de resposta existentes no MuSLR:
+O artigo refere 46,8% para o melhor baseline GPT-4.1 e uma melhoria de 14,13 pontos percentuais através do LogiCAM. A presente experiência utiliza IAedu e apenas cinco exemplos, pelo que não é uma reprodução diretamente comparável desses valores.
 
-- escolha múltipla, com letras;
-- avaliação lógica, com `True`, `False` ou `Unknown`.
+## 9. Teste cruzado MuSLR/LogiCAM para MMMU
 
-## 9. Teste cruzado MMMU para LogiCAM
+Cinco exemplos oficiais do MuSLR foram processados com prompting direto no estilo MMMU.
 
-Neste teste, exemplos oficiais do MMMU foram processados com um fluxo inspirado no LogiCAM:
-
-1. seleção das premissas relevantes;
-2. identificação do tipo de raciocínio;
-3. raciocínio lógico ou matemático estruturado;
-4. conclusão final.
-
-Resultado:
-
-| Dataset de entrada | Método | Exemplos | Corretos | Accuracy |
+| Dataset | Método | Exemplos | Corretos | Accuracy |
 |---|---|---:|---:|---:|
-| MMMU validation / Accounting | LogiCAM-style reasoning | 3 | 3 | 100% |
+| MuSLR/LogiCAM | MMMU-style | 5 | 3 | 60,0% |
 
-O resultado foi confirmado pelo avaliador oficial:
+Resultados:
 
-- `Accounting`: 3 exemplos, accuracy 1.0
-- `Overall`: 3 exemplos, accuracy 1.0
+| ID | Previsão | Correta | Resultado |
+|---|---:|---:|---|
+| `flickr30k_7760` | A | B | Errado |
+| `flickr30k_6121` | D | D | Correto |
+| `coco_2031` | A | A | Correto |
+| `coco_6860` | B | B | Correto |
+| `rvl_652` | C | A | Errado |
 
-## 10. Resumo
+## 10. Teste cruzado MMMU para LogiCAM
 
-| Experiência | Exemplos | Accuracy |
+Cinco perguntas da disciplina `Accounting`, do conjunto `validation` do MMMU, foram processadas com o fluxo LogiCAM.
+
+| Dataset | Método | Exemplos | Corretos | Accuracy |
+|---|---|---:|---:|---:|
+| MMMU validation / Accounting | LogiCAM-style | 5 | 4 | 80,0% |
+
+Resultados:
+
+| ID | Previsão | Correta | Resultado |
+|---|---:|---:|---|
+| `validation_Accounting_1` | B | B | Correto |
+| `validation_Accounting_2` | C | C | Correto |
+| `validation_Accounting_3` | B | B | Correto |
+| `validation_Accounting_4` | D | D | Correto |
+| `validation_Accounting_5` | C | B | Errado |
+
+O avaliador oficial do MMMU confirmou:
+
+- `Accounting`: 5 exemplos, accuracy 0,8
+- `Overall`: 5 exemplos, accuracy 0,8
+
+## 11. Resumo
+
+| Experiência | Exemplos | Resultado |
 |---|---:|---:|
-| Avaliação das previsões LLaVA fornecidas pelos autores | 900 | 36,7% |
-| MMMU com IAedu | 3 | 100% |
-| MuSLR/LogiCAM para MMMU | 3 | 66,7% |
-| MMMU para LogiCAM | 3 | 100% |
+| MMMU, previsões LLaVA fornecidas | 900 | 36,7% |
+| LogicRAG/KITTI oficial | 101 | Accuracy 0,94 / F1 0,97 |
+| VisuLogic com IAedu | 5 | 60,0% |
+| MuSLR com fluxo LogiCAM | 5 | 60,0% |
+| MuSLR/LogiCAM → MMMU | 5 | 60,0% |
+| MMMU → LogiCAM | 5 | 80,0% |
 
-## 11. Limitações
+## 12. Conclusão
 
-Os testes através da IAedu e os testes cruzados utilizaram amostras controladas de três exemplos. Demonstram que os adaptadores e os dois sentidos de execução funcionam, mas não representam a accuracy integral dos benchmarks.
+Os resultados publicados não foram todos reproduzidos exatamente:
 
-Uma avaliação completa exigiria pelo menos:
+- MMMU: resultado próximo, com diferença de 0,3 pontos percentuais.
+- LogicRAG: valores superiores aos publicados, usando 101 perguntas em vez das 100 descritas no artigo.
+- VisuLogic e LogiCAM: integrações executadas sobre amostras oficiais com IAedu, mas sem comparação direta com os modelos originais.
 
-- 900 chamadas para o conjunto validation do MMMU;
-- 1.093 chamadas para o MuSLR;
-- chamadas adicionais caso os módulos LogiCAM fossem executados separadamente.
+Os dois testes cruzados pedidos foram implementados e executados nos dois sentidos.
 
-O teste MMMU para LogiCAM utiliza o fluxo integrado neste projeto, inspirado na framework LogiCAM. Não constitui uma repetição integral do notebook batch oficial.
+## 13. Limitações
 
-## 12. Evidências
+As experiências com IAedu utilizam amostras de cinco exemplos e não representam a accuracy integral dos benchmarks.
 
-As previsões, respostas completas e logs encontram-se em:
+A reprodução integral exigiria:
 
-- `MMMU/resultados/`
+- milhares de chamadas multimodais;
+- acesso aos modelos originais;
+- GPU adequada ou serviços pagos;
+- repetição exata das configurações e versões usadas pelos autores.
+
+## 14. Evidências
+
+As previsões, respostas e logs encontram-se em:
+
+- `LogicRAG/resultados/pedro_*`
+- `VisuLogic/resultados/pedro_*`
+- `MMMU/resultados/pedro_*`
 - `MuSLR/resultados/pedro_*`
-
-Os pedidos enviados à IAedu identificam explicitamente:
-
-`"name": "Pedro Vieira"`

@@ -56,3 +56,12 @@ MuSLR/MuSLR-Dataset/
 # MMMU-Pro não faz parte do artigo pedido
 MMMU/mmmu-pro/
 MMMU/mmmu-pro.png
+
+# Evidencias de Pedro Vieira - VisuLogic
+!VisuLogic/resultados/pedro_*.jsonl
+!VisuLogic/resultados/pedro_*.txt
+
+# Evidencias de Pedro Vieira - LogicRAG
+LogicRAG/resultados/*
+!LogicRAG/resultados/pedro_*.csv
+!LogicRAG/resultados/pedro_*.txt

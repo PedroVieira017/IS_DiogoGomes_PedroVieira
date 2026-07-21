@@ -88,48 +88,50 @@ def construir_prompt(inst):
 
 
 def chamar_iaedu(prompt, image_path):
-    """Envia o prompt (e a imagem, se existir) para o agente IAedu — inferência na nuvem."""
+    """Envia o prompt e a imagem usando o cliente IAedu partilhado."""
+    import sys
+
+    client_dir = (
+        BASE_DIR.parent
+        / "LLaVA-SpaceSGG"
+        / "dataset_pipeline"
+        / "stage2"
+    )
+
+    if str(client_dir) not in sys.path:
+        sys.path.insert(0, str(client_dir))
+
+    from iaedu_client import call_iaedu
+
     api_key = os.getenv("OPENAI_API_KEY")
     api_endpoint = os.getenv("OPENAI_API_ENDPOINT")
     channel_id = os.getenv("IAEDU_CHANNEL_ID")
-    thread_id = os.getenv("IAEDU_THREAD_ID") or f"muslr_{datetime.now():%Y%m%d_%H%M%S}"
+    thread_id = (
+        os.getenv("IAEDU_THREAD_ID")
+        or f"muslr_{datetime.now():%Y%m%d_%H%M%S}"
+    )
+
     if not api_key or not api_endpoint or not channel_id:
-        raise RuntimeError("Faltam credenciais no .env (OPENAI_API_KEY, OPENAI_API_ENDPOINT, IAEDU_CHANNEL_ID).")
+        raise RuntimeError(
+            "Faltam credenciais no .env "
+            "(OPENAI_API_KEY, OPENAI_API_ENDPOINT, IAEDU_CHANNEL_ID)."
+        )
 
     print(f"Using IAedu thread: {thread_id}\n")
-    multipart = {
-        "message": (None, prompt),
-        "thread_id": (None, thread_id),
-        "channel_id": (None, channel_id),
-        "user_info": (None, "{}"),
-    }
-    if image_path and Path(image_path).exists():
-        multipart["files"] = (Path(image_path).name, Path(image_path).read_bytes())
 
-    response = requests.post(api_endpoint, headers={"x-api-key": api_key},
-                             files=multipart, stream=True, timeout=120)
-    response.raise_for_status()
-
-    partes = []
-    for line in response.iter_lines():
-        if not line:
-            continue
-        decoded = line.decode("utf-8")
-        if decoded.startswith("data: "):
-            decoded = decoded[len("data: "):]
-        try:
-            chunk = json.loads(decoded)
-            if chunk.get("type") == "token":
-                token = chunk.get("content", "")
-                if token:
-                    print(token, end="", flush=True)
-                    partes.append(token)
-            elif chunk.get("type") == "done":
-                break
-        except json.JSONDecodeError:
-            pass
-    return "".join(partes).strip()
-
+    return call_iaedu(
+        message=prompt,
+        channel_id=channel_id,
+        thread_id=thread_id,
+        user_info={
+            "name": "Pedro Vieira",
+            "project": "MuSLR / LogiCAM",
+        },
+        endpoint=api_endpoint,
+        api_key=api_key,
+        timeout=180,
+        image_path=image_path,
+    )
 
 def chamar_ollama_vision(prompt, image_path):
     """Envia o prompt (e a imagem em base64, se existir) a um modelo local via Ollama."""
@@ -171,7 +173,7 @@ def main():
 
     try:
         from dotenv import load_dotenv
-        load_dotenv()
+        load_dotenv(BASE_DIR.parent / "VisuLogic" / ".env")
     except ImportError:
         pass
 

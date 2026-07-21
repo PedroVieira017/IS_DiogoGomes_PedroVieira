@@ -1,0 +1,13 @@
+MuSLR / LogiCAM ù RaciocÝnio Simb¾lico Multimodal
+
+Motor selecionado: IAEDU
+
+InstÔncia: coco_2031 | domÝnio: Sports | l¾gica: pl
+
+Resposta:
+--------------------------------------------------
+Using IAedu thread: pedro-logicam-coco_2031-v1
+
+
+--------------------------------------------------
+Resposta guardada em MuSLR\resultados\pedro_logicam_coco_2031.json

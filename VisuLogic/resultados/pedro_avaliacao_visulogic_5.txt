@@ -1,0 +1,15 @@
+Responsavel: Pedro Vieira
+Benchmark: VisuLogic
+Modelo testado: IAedu
+Amostra: primeiras 5 perguntas oficiais
+
+00000: previsao=C, correta=A, resultado=ERRADO
+00001: previsao=D, correta=D, resultado=CERTO
+00002: previsao=C, correta=C, resultado=CERTO
+00003: previsao=C, correta=B, resultado=ERRADO
+00004: previsao=D, correta=D, resultado=CERTO
+
+Resultado: 3/5
+Accuracy: 0.600
+Categorias: {'Quantitative Reasoning': 1, 'Other': 1, 'Positional Reasoning': 1, 'Stylistic Reasoning': 1, 'Spatial Reasoning': 1}
+Previsoes: ..\resultados\pedro_iaedu_visulogic_5.jsonl

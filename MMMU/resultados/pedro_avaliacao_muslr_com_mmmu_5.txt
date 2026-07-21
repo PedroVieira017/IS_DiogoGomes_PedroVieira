@@ -1,0 +1,13 @@
+Responsavel: Pedro Vieira
+Experiencia: dataset MuSLR/LogiCAM no fluxo MMMU
+
+flickr30k_7760: previsao=A, correta=B, resultado=ERRADO
+flickr30k_6121: previsao=D, correta=D, resultado=CERTO
+coco_2031: previsao=A, correta=A, resultado=CERTO
+coco_6860: previsao=B, correta=B, resultado=CERTO
+rvl_652: previsao=C, correta=A, resultado=ERRADO
+
+Resultado: 3/5
+Accuracy: 0.600
+Previsoes: MMMU\resultados\pedro_muslr_com_mmmu_5.json
+Detalhes: MMMU\resultados\pedro_muslr_com_mmmu_5_details.json

@@ -1,0 +1,40 @@
+{
+  "responsavel": "Pedro Vieira",
+  "experiencia": "MuSLR com fluxo LogiCAM",
+  "modelo": "IAedu",
+  "total": 5,
+  "correct": 3,
+  "accuracy": 0.6,
+  "results": [
+    {
+      "id": "flickr30k_7760",
+      "prediction": "A",
+      "gold_answer": "B",
+      "correct": false
+    },
+    {
+      "id": "flickr30k_6121",
+      "prediction": "D",
+      "gold_answer": "D",
+      "correct": true
+    },
+    {
+      "id": "coco_2031",
+      "prediction": "True",
+      "gold_answer": "True",
+      "correct": true
+    },
+    {
+      "id": "coco_6860",
+      "prediction": "False",
+      "gold_answer": "False",
+      "correct": true
+    },
+    {
+      "id": "rvl_652",
+      "prediction": "Unknown",
+      "gold_answer": "True",
+      "correct": false
+    }
+  ]
+}

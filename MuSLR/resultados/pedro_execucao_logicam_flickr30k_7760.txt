@@ -1,0 +1,13 @@
+MuSLR / LogiCAM ù RaciocÝnio Simb¾lico Multimodal
+
+Motor selecionado: IAEDU
+
+InstÔncia: flickr30k_7760 | domÝnio: Sports | l¾gica: pl
+
+Resposta:
+--------------------------------------------------
+Using IAedu thread: pedro-logicam-flickr30k_7760-v2
+
+
+--------------------------------------------------
+Resposta guardada em MuSLR\resultados\pedro_logicam_flickr30k_7760.json

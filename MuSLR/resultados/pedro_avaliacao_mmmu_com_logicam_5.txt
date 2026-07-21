@@ -1,0 +1,13 @@
+Responsavel: Pedro Vieira
+Experiencia: dataset MMMU no fluxo LogiCAM
+
+validation_Accounting_1: previsao=B, correta=B, resultado=CERTO
+validation_Accounting_2: previsao=C, correta=C, resultado=CERTO
+validation_Accounting_3: previsao=B, correta=B, resultado=CERTO
+validation_Accounting_4: previsao=D, correta=D, resultado=CERTO
+validation_Accounting_5: previsao=C, correta=B, resultado=ERRADO
+
+Resultado: 4/5
+Accuracy: 0.800
+Previsoes: MuSLR\resultados\pedro_mmmu_com_logicam_5.json
+Detalhes: MuSLR\resultados\pedro_mmmu_com_logicam_5_details.json

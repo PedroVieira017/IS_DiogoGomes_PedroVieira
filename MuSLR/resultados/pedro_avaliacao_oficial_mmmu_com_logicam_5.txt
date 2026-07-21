@@ -1,0 +1,60 @@
+Evaluating: Accounting
+Evaluating: Agriculture
+Skipping Agriculture for not found
+Evaluating: Architecture_and_Engineering
+Skipping Architecture_and_Engineering for not found
+Evaluating: Art
+Skipping Art for not found
+Evaluating: Art_Theory
+Skipping Art_Theory for not found
+Evaluating: Basic_Medical_Science
+Skipping Basic_Medical_Science for not found
+Evaluating: Biology
+Skipping Biology for not found
+Evaluating: Chemistry
+Skipping Chemistry for not found
+Evaluating: Clinical_Medicine
+Skipping Clinical_Medicine for not found
+Evaluating: Computer_Science
+Skipping Computer_Science for not found
+Evaluating: Design
+Skipping Design for not found
+Evaluating: Diagnostics_and_Laboratory_Medicine
+Skipping Diagnostics_and_Laboratory_Medicine for not found
+Evaluating: Economics
+Skipping Economics for not found
+Evaluating: Electronics
+Skipping Electronics for not found
+Evaluating: Energy_and_Power
+Skipping Energy_and_Power for not found
+Evaluating: Finance
+Skipping Finance for not found
+Evaluating: Geography
+Skipping Geography for not found
+Evaluating: History
+Skipping History for not found
+Evaluating: Literature
+Skipping Literature for not found
+Evaluating: Manage
+Skipping Manage for not found
+Evaluating: Marketing
+Skipping Marketing for not found
+Evaluating: Materials
+Skipping Materials for not found
+Evaluating: Math
+Skipping Math for not found
+Evaluating: Mechanical_Engineering
+Skipping Mechanical_Engineering for not found
+Evaluating: Music
+Skipping Music for not found
+Evaluating: Pharmacy
+Skipping Pharmacy for not found
+Evaluating: Physics
+Skipping Physics for not found
+Evaluating: Psychology
+Skipping Psychology for not found
+Evaluating: Public_Health
+Skipping Public_Health for not found
+Evaluating: Sociology
+Skipping Sociology for not found
+{'Overall-Art and Design': {'num': 0, 'acc': 0}, 'Overall-Business': {'num': 5, 'acc': 0.8}, 'Accounting': {'num': 5, 'acc': 0.8}, 'Overall-Science': {'num': 0, 'acc': 0}, 'Overall-Health and Medicine': {'num': 0, 'acc': 0}, 'Overall-Humanities and Social Science': {'num': 0, 'acc': 0}, 'Overall-Tech and Engineering': {'num': 0, 'acc': 0}, 'Overall': {'num': 5, 'acc': 0.8}}

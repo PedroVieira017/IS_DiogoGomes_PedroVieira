@@ -154,7 +154,8 @@ class ModelEvaluator:
         all_scores = []
 
         for result in eval_results:
-            score = 1.0 if result['answer'].lower() == result['extracted_answer'].lower() else 0.0
+            ground_truth = result.get("answer", result.get("label", ""))
+            score = 1.0 if ground_truth.lower() == result["extracted_answer"].lower() else 0.0
             tag = result['tag']
             
             all_scores.append(score)

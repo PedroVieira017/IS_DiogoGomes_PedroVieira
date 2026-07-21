@@ -1,0 +1,14 @@
+Responsavel: Pedro Vieira
+Experiencia: MuSLR com fluxo LogiCAM
+Modelo testado: IAedu
+Amostra: primeiros 5 exemplos oficiais
+
+flickr30k_7760: previsao=A, correta=B, resultado=ERRADO
+flickr30k_6121: previsao=D, correta=D, resultado=CERTO
+coco_2031: previsao=True, correta=True, resultado=CERTO
+coco_6860: previsao=False, correta=False, resultado=CERTO
+rvl_652: previsao=Unknown, correta=True, resultado=ERRADO
+
+Resultado: 3/5
+Accuracy: 0.600
+Resumo: MuSLR\resultados\pedro_avaliacao_logicam_5.json
