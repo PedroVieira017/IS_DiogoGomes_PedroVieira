@@ -1,382 +1,203 @@
-# IS_DiogoGomes_PedroVieira
+# Raciocínio multimodal: integração e avaliação
 
-Projeto de demonstração com quatro módulos de raciocínio visual e simbólico:
+Este projeto reúne várias abordagens de raciocínio sobre imagens, texto e regras lógicas. O objetivo foi perceber como cada implementação funciona, confirmar os resultados que era possível reproduzir e testar a troca de datasets entre o **MMMU** e o **LogiCAM/MuSLR**.
 
-- **LogicRAG**: usa uma base de conhecimento pré-computada do KITTI, traduz factos em First-Order Logic para linguagem natural e envia o contexto para um agente IAedu.
-- **LLaVA-SpaceSGG**: envia uma imagem real para a API IAedu e recebe uma descrição estruturada com objetos, caixas, relações espaciais, camadas de profundidade e perguntas/respostas comparativas.
-- **VisuLogic**: integra o código oficial de avaliação do benchmark VisuLogic e envia imagem + pergunta para a API IAedu ou para um modelo local via Ollama.
-- **MuSLR**: integra o artigo "MuSLR: Multimodal Symbolic Logical Reasoning" (NeurIPS 2025) e a framework LogiCAM para avaliar raciocínio simbólico formal (True/False/Unknown) sobre imagens e regras lógicas.
+**Responsável pela execução, integração e documentação dos testes: Pedro Vieira.**
 
-Os fluxos LogicRAG, LLaVA-SpaceSGG, VisuLogic e MuSLR podem correr de duas formas:
+O relatório completo, com os comandos, resultados e limitações, está disponível em [MMMU/RELATORIO_PEDRO.md](MMMU/RELATORIO_PEDRO.md).
 
-- `iaedu`: envia o pedido para a API IAedu na nuvem.
-- `ollama`: corre um modelo local atraves do Ollama (`llama3` para texto, `llava` para visao), sem internet nem chave de API.
+## Componentes do projeto
 
-O objetivo do repositorio e deixar um fluxo reproduzivel para demonstracao, screenshots e apresentacao.
+- **MMMU** — benchmark multidisciplinar com perguntas de nível universitário que combinam texto e imagens.
+- **LogicRAG** — transforma informação visual em factos e aplica raciocínio lógico sobre dados do KITTI.
+- **LLaVA-SpaceSGG** — analisa imagens e produz descrições estruturadas de objetos, posições e relações espaciais.
+- **VisuLogic** — avalia raciocínio visual através de perguntas de escolha múltipla.
+- **MuSLR/LogiCAM** — combina imagens, contexto textual e regras formais para responder a perguntas de lógica simbólica.
 
-## Estrutura
+Os módulos integrados suportam dois tipos de backend:
+
+- `iaedu`: utiliza a API IAedu;
+- `ollama`: utiliza um modelo local através do Ollama.
+
+## Trabalho realizado
+
+Foram concluídas as seguintes tarefas:
+
+- execução do avaliador oficial do MMMU sobre as 900 previsões LLaVA-1.5-13B fornecidas pelos autores;
+- execução do mesmo avaliador sobre as 900 previsões Qwen-VL fornecidas pelos autores;
+- execução do LogicRAG com os dados KITTI pré-calculados disponíveis no repositório;
+- integração da IAedu no VisuLogic e no fluxo LogiCAM;
+- teste do VisuLogic e do MuSLR/LogiCAM sobre amostras oficiais;
+- teste do dataset MuSLR/LogiCAM no fluxo MMMU;
+- teste do dataset MMMU no fluxo LogiCAM;
+- registo das previsões, avaliações e logs com identificação de Pedro Vieira.
+
+## Resultados principais
+
+| Experiência | Exemplos | Resultado |
+|---|---:|---:|
+| MMMU — previsões LLaVA-1.5-13B fornecidas | 900 | 36,7% |
+| MMMU — previsões Qwen-VL fornecidas | 900 | 36,1% |
+| LogicRAG/KITTI | 101 | Accuracy 0,94 / F1 0,97 |
+| VisuLogic com IAedu | 5 | 60,0% |
+| MuSLR com fluxo LogiCAM | 5 | 60,0% |
+| Dataset MuSLR/LogiCAM no fluxo MMMU | 5 | 60,0% |
+| Dataset MMMU no fluxo LogiCAM | 5 | 80,0% |
+
+## Limitações dos testes
+
+Os resultados devem ser interpretados de acordo com o âmbito de cada experiência:
+
+- o dataset completo do VisuLogic tem 1.000 perguntas, mas a inferência foi feita sobre cinco exemplos;
+- o MuSLR tem 1.093 registos, mas os testes com LogiCAM utilizaram cinco exemplos;
+- cada teste cruzado foi realizado sobre cinco exemplos;
+- o MMMU foi avaliado sobre previsões completas fornecidas pelos autores, sem voltar a executar os modelos LLaVA-1.5-13B e Qwen-VL;
+- foi utilizado o backend IAedu nos testes próprios, não todos os modelos originais avaliados nos artigos.
+
+A execução integral exigiria milhares de chamadas multimodais e bastante mais tempo. Alguns modelos dependem de APIs comerciais, enquanto os modelos abertos exigem downloads grandes, ambientes específicos e uma GPU adequada. Estas limitações estão explicadas com mais detalhe no relatório.
+
+## Estrutura principal
 
 ```text
 .
-+-- LogicRAG/
-|   +-- parse_kb_to_csv.py
-|   +-- driving_agent.py
-|   +-- environment.yml
-|   +-- README.md
-+-- LLaVA-SpaceSGG/
-|   +-- dataset_pipeline/stage2/run_iaedu_image.py
-|   +-- dataset_pipeline/stage2/iaedu_client.py
-|   +-- dataset_pipeline/stage2/visualize_layers.py
-|   +-- images_real/
-|   +-- README.md
-+-- VisuLogic/
-|   +-- README.md
-|   +-- resultados/
-|   +-- VisuLogic-Eval/
-|       +-- models/iaedu_api.py
-|       +-- models/ollama_vision.py
-+-- MuSLR/
-|   +-- README.md
-|   +-- muslr_agent.py
-|   +-- data/
-|   +-- resultados/
-|   +-- MuSLR-Code/
-+-- .gitignore
+├── LogicRAG/          # raciocínio lógico sobre dados KITTI
+├── LLaVA-SpaceSGG/    # análise espacial de imagens
+├── MMMU/              # avaliador, integrações, resultados e relatório
+├── MuSLR/             # dataset e fluxo LogiCAM
+├── VisuLogic/         # benchmark de raciocínio visual
+├── integra.py         # menu de execução dos módulos
+└── pipeline.py        # pipeline integrado
 ```
 
-## Requisitos
+Os datasets completos, imagens, ficheiros `.env` e outros dados de grande dimensão não são guardados no GitHub.
 
-O caminho recomendado é o **Docker** — corre os quatro módulos num único contentor, sem instalar Python, Conda nem pacotes de IA localmente (ver [Execução via Docker](#execução-via-docker)).
+## Configuração da IAedu
 
-- Docker + Docker Compose (caminho principal)
-- Credenciais da API IAedu (ficheiros `.env` por módulo) **ou** Ollama instalado no host para inferência local
-- Dados pre-computados do LogicRAG em `LogicRAG/LogicRAG_Data/`
-
-Alternativamente, é possível correr sem Docker com Miniconda/Anaconda e um ambiente `lrag` (instruções em PowerShell nas secções de demo mais abaixo).
-
-Os ficheiros `.env`, dados grandes, zips e outputs locais nao devem ser enviados para o GitHub.
-
-## Configuracao das Chaves
-
-Criar um ficheiro `.env` dentro de `LogicRAG/`:
+Quando for utilizado o backend IAedu, é necessário um ficheiro `.env` com esta estrutura:
 
 ```env
-OPENAI_API_KEY=colocar_a_chave_iaedu
-OPENAI_API_ENDPOINT=colocar_o_endpoint_stream_iaedu
+OPENAI_API_KEY=colocar_a_chave
+OPENAI_API_ENDPOINT=colocar_o_endpoint
 IAEDU_CHANNEL_ID=colocar_o_channel_id
 IAEDU_THREAD_ID=colocar_um_thread_id
 ```
 
-Criar um ficheiro `.env` dentro de `LLaVA-SpaceSGG/`:
+As credenciais nunca devem ser enviadas para o GitHub. Dependendo do módulo executado, o `.env` deve estar numa destas pastas:
 
-```env
-OPENAI_API_KEY=colocar_a_chave_iaedu
-OPENAI_API_ENDPOINT=colocar_o_endpoint_stream_iaedu
-IAEDU_CHANNEL_ID=colocar_o_channel_id
-IAEDU_THREAD_ID=colocar_um_thread_id
-```
+- `LogicRAG/`
+- `LLaVA-SpaceSGG/`
+- `VisuLogic/`
+- `MuSLR/`
 
-Criar também um ficheiro `.env` dentro de `VisuLogic/`:
+## Execução rápida com Docker
 
-```env
-OPENAI_API_KEY=colocar_a_chave_iaedu
-OPENAI_API_ENDPOINT=colocar_o_endpoint_stream_iaedu
-IAEDU_CHANNEL_ID=colocar_o_channel_id
-IAEDU_THREAD_ID=colocar_um_thread_id
-```
+Na raiz do projeto, construir a imagem:
 
-Criar também um ficheiro `.env` dentro de `MuSLR/`:
-
-```env
-OPENAI_API_KEY=colocar_a_chave_iaedu
-OPENAI_API_ENDPOINT=colocar_o_endpoint_stream_iaedu
-IAEDU_CHANNEL_ID=colocar_o_channel_id
-IAEDU_THREAD_ID=colocar_um_thread_id
-```
-
-Para confirmar que os ficheiros existem sem mostrar as chaves:
-
-```powershell
-Get-Content .\LogicRAG\.env | ForEach-Object { ($_ -split '=')[0] + '=***' }
-Get-Content .\LLaVA-SpaceSGG\.env | ForEach-Object { ($_ -split '=')[0] + '=***' }
-Get-Content .\VisuLogic\.env | ForEach-Object { ($_ -split '=')[0] + '=***' }
-Get-Content .\MuSLR\.env | ForEach-Object { ($_ -split '=')[0] + '=***' }
-```
-
-## Execução via Docker 
-
-Todos os quatro módulos do projeto (**LogicRAG**, **LLaVA-SpaceSGG**, **VisuLogic** e **MuSLR**) podem ser executados dentro de um único contentor Docker, sem a necessidade de configurar ambientes Conda locais ou instalar pacotes de IA pesados.
-
-### 1. Construir a Imagem Docker
-A partir da raiz do projeto, execute:
 ```bash
 docker compose build
 ```
 
-### 2. Configuração do Backend (IAedu ou Ollama)
-O contentor utiliza as credenciais nos ficheiros `.env` locais de cada módulo. 
-- **Para IAedu (Nuvem):** Garanta que os ficheiros `.env` estão configurados nas pastas respetivas de cada módulo com as chaves corretas.
-- **Para Ollama (Local no Host):** Para aceder ao Ollama instalado no seu computador a partir de dentro do Docker, os scripts utilizam `http://host.docker.internal:11434`.
-  > [!IMPORTANT]
-  > Para que o Ollama no seu computador aceite ligações vindas do Docker, deve configurá-lo para escutar em todas as interfaces. 
-  > - No macOS/Linux, arranque o Ollama no terminal com: `OLLAMA_HOST=0.0.0.0 ollama serve`
-  > - No Windows, defina a variável de ambiente de sistema `OLLAMA_HOST` para `0.0.0.0` e reinicie o Ollama.
+Abrir o menu integrado:
 
-### 3. Execução Interativa Integrada (Recomendado)
-
-O repositório inclui um script de integração `integra.py` que disponibiliza um menu no terminal para executar interativamente qualquer um dos 4 projetos:
 ```bash
 docker compose run --rm app python integra.py
 ```
-*(Será apresentado um menu numerado onde poderá escolher o projeto e o backend desejado (IAedu ou Ollama).)*
 
-### 4. Comandos Individuais para Executar cada Módulo
+O menu permite escolher o módulo e o backend. No VisuLogic, é possível utilizar o modo de benchmark ou fazer uma pergunta livre sobre uma imagem.
 
-#### A. LogicRAG
-> [!NOTE]
-> Estes scripts esperam ser executados a partir da pasta `LogicRAG/` (usam caminhos relativos como `LogicRAG_Data/...`), por isso o comando fixa o working-dir com `-w /app/LogicRAG`. Requer os dados pré-computados em `LogicRAG/LogicRAG_Data/precomputed_knowledge_base/kb_out_kitti/`.
-
-1. Traduzir factos em First-Order Logic para linguagem natural:
-   ```bash
-   docker compose run --rm -w /app/LogicRAG app python parse_kb_to_csv.py
-   ```
-2. Executar inferência (IAedu ou Ollama):
-   ```bash
-   docker compose run --rm -w /app/LogicRAG app python driving_agent.py
-   ```
-
-#### B. LLaVA-SpaceSGG
-1. Executar análise da imagem:
-   ```bash
-   docker compose run --rm app python LLaVA-SpaceSGG/dataset_pipeline/stage2/run_iaedu_image.py --image LLaVA-SpaceSGG/images_real/primeira_imagem.png --output-file LLaVA-SpaceSGG/resultados/teste_docker.json
-   ```
-2. Gerar visualização das camadas de profundidade:
-   ```bash
-   docker compose run --rm app python LLaVA-SpaceSGG/dataset_pipeline/stage2/visualize_layers.py --result-file LLaVA-SpaceSGG/resultados/teste_docker.json --output-file LLaVA-SpaceSGG/resultados/visualizacoes/teste_layers_docker.png
-   ```
-
-#### C. VisuLogic
-Executar a avaliação com a **amostra de demonstração** já incluída no repositório (2 exemplos + imagens em `VisuLogic/VisuLogic-Eval/demo/`), sem precisar de descarregar o benchmark completo:
-```bash
-docker compose run --rm -w /app/VisuLogic/VisuLogic-Eval app python evaluation/eval_model.py --input_file demo/data.jsonl --output_file outputs/iaedu_docker.jsonl --model_path iaedu --api_timeout 180
-```
-> [!NOTE]
-> A amostra `demo/` serve apenas para confirmar que o pipeline corre ponta-a-ponta. Para uma avaliação real, descarregar o dataset oficial de [huggingface.co/datasets/VisuLogic/VisuLogic](https://huggingface.co/datasets/VisuLogic/VisuLogic), colocar `data.jsonl` + `images/` em `VisuLogic/VisuLogic-Eval/` e usar `--input_file VisuLogic/VisuLogic-Eval/data.jsonl`.
-
-#### D. MuSLR
-Executar a inferência de raciocínio simbólico (exemplo demonstrativo):
-```bash
-docker compose run --rm app python MuSLR/muslr_agent.py --dataset MuSLR/data/muslr_sample.jsonl --id demo_001
-```
-
-## Preparar Ambiente
-
-A partir da raiz do projeto:
-
-```powershell
-cd "C:\Users\Master\Desktop\IS_moreDiogoGomes\2025-LMM-LogicRag-Visual\IS_DiogoGomes_PedroVieira"
-conda activate lrag
-```
-
-Se for necessario instalar o suporte a `.env`:
-
-```powershell
-python -m pip install python-dotenv
-```
-
-## Dados do LogicRAG
-
-O projeto espera a pasta:
-
-```text
-LogicRAG/LogicRAG_Data/
-```
-
-Esta pasta contem os dados grandes e esta ignorada pelo Git. Se os dados ja tiverem sido extraidos noutro diretorio, podem ser copiados para dentro de `LogicRAG/`.
-
-Exemplo:
-
-```powershell
-Copy-Item -Recurse -Path "C:\caminho\para\LogicRAG_Data" -Destination ".\LogicRAG\LogicRAG_Data"
-```
-
-## Demo 1: LogicRAG + IAedu
-
-Entrar na pasta do LogicRAG:
-
-```powershell
-cd .\LogicRAG
-```
-
-Converter os ficheiros de conhecimento pre-computado para factos em linguagem natural:
-
-```powershell
-python .\parse_kb_to_csv.py
-```
-
-Resultado esperado:
-
-- O script encontra os ficheiros KB em `LogicRAG_Data/precomputed_knowledge_base/kb_out_kitti`.
-- Gera o ficheiro local `resultados_kitti.csv`.
-- Mostra no terminal os factos traduzidos.
-
-Enviar o ultimo facto para o agente IAedu:
-
-```powershell
-python .\driving_agent.py
-```
-
-Resultado esperado:
-
-- O script le o ultimo facto em `resultados_kitti.csv`.
-- Envia o contexto para a API IAedu.
-- Mostra uma resposta do agente com a acao recomendada para o veiculo.
-- Guarda o historico local em `logic_rag_response.csv`.
-
-## Demo 2: LLaVA-SpaceSGG + IAedu
-
-Voltar a raiz e entrar na pasta do LLaVA-SpaceSGG:
-
-```powershell
-cd ..
-cd .\LLaVA-SpaceSGG
-```
-
-Executar a analise de uma imagem real:
-
-```powershell
-python .\dataset_pipeline\stage2\run_iaedu_image.py --image .\images_real\primeira_imagem.png --output-file .\resultados\teste_iaedu_image.json
-```
-
-Ver o resultado:
-
-```powershell
-Get-Content .\resultados\teste_iaedu_image.json -TotalCount 40
-```
-
-Resultado esperado:
-
-- O script envia a imagem para o agente IAedu.
-- O output JSON contem uma descricao da imagem, objetos, bounding boxes, relacoes espaciais, camadas de profundidade e perguntas/respostas comparativas.
-
-Desenhar as camadas de profundidade sobre a imagem (precisa de `opencv-python`):
-
-```powershell
-python .\dataset_pipeline\stage2\visualize_layers.py --result-file .\resultados\teste_iaedu_image.json --output-file .\resultados\visualizacoes\teste_layers.png
-```
-
-Resultado esperado:
-
-- Le as `Layer N: <ref>...</ref><box>[[...]]</box>` do JSON e desenha cada caixa, com uma cor por camada de profundidade.
-- Guarda a imagem anotada no caminho indicado.
-- Nota: voltar a correr `visualize_layers.py` sempre que o JSON for regerado, senao a imagem fica dessincronizada do resultado.
-
-## Demo 3 (Alternativa): Inferencia Local com Ollama
-
-Em vez da nuvem IAedu, os fluxos podem correr com modelos locais via Ollama. Util para demonstrar sem internet nem chave de API.
-
-Preparar o Ollama (uma vez):
+Também é possível executar diretamente uma pergunta livre no pipeline:
 
 ```bash
-ollama serve            # arrancar o servidor local (fica a correr)
-ollama pull llama3      # modelo de texto para o LogicRAG
-ollama pull llava       # modelo de visao para o LLaVA-SpaceSGG
+docker compose run --rm app python pipeline.py \
+  --image "caminho/para/imagem.jpg" \
+  --question "Que relação existe entre os objetos?" \
+  --backend iaedu
 ```
 
-LogicRAG com Ollama (a partir de `LogicRAG/`):
+Para usar o Ollama instalado no computador a partir do Docker, o serviço deve aceitar ligações em `http://host.docker.internal:11434`.
+
+## Comandos úteis
+
+### Avaliar as previsões LLaVA no MMMU
+
+```powershell
+Push-Location .\MMMU\mmmu
+
+python .\main_eval_only.py `
+  --output_path .\example_outputs\llava1.5_13b\total_val_output.json `
+  --answer_path .\answer_dict_val.json
+
+Pop-Location
+```
+
+### Avaliar as previsões Qwen-VL no MMMU
+
+```powershell
+Push-Location .\MMMU\mmmu
+
+python .\main_eval_only.py `
+  --output_path .\example_outputs\qwen_vl\total_val_output.json `
+  --answer_path .\answer_dict_val.json
+
+Pop-Location
+```
+
+### Fazer uma pergunta livre no VisuLogic
 
 ```bash
-LLM_BACKEND=ollama OLLAMA_MODEL=llama3 python driving_agent.py
+docker compose run --rm app python VisuLogic/VisuLogic-Eval/evaluation/manual_query.py \
+  --image "caminho/para/imagem.jpg" \
+  --question "O que está a acontecer nesta imagem?" \
+  --model_path iaedu
 ```
 
-LLaVA-SpaceSGG com Ollama (a partir de `LLaVA-SpaceSGG/`):
+### Executar a demonstração do VisuLogic
 
 ```bash
-LLM_BACKEND=ollama OLLAMA_VISION_MODEL=llava python dataset_pipeline/stage2/run_iaedu_image.py --image images_real/primeira_imagem.png --output-file resultados/ollama_primeira.json
+docker compose run --rm -w /app/VisuLogic/VisuLogic-Eval app \
+  python evaluation/eval_model.py \
+  --input_file demo/data.jsonl \
+  --output_file outputs/iaedu_docker.jsonl \
+  --model_path iaedu \
+  --api_timeout 180
 ```
 
-Notas:
+Esta demonstração contém apenas dois exemplos e serve para confirmar que o fluxo funciona do início ao fim.
 
-- `LLM_BACKEND` por omissao e `iaedu`; basta defini-la como `ollama` para alternar (no PowerShell usar `$env:LLM_BACKEND="ollama"`).
-- O modelo local `llava` da uma descricao mais solta e nao garante o formato estruturado de boxes 0-999 como a IAedu, por isso o resultado nao e identico ao da nuvem.
-- Em maquinas com pouca RAM, usar modelos mais leves (ex. `OLLAMA_MODEL=llama3.2:3b`).
+### Executar uma demonstração do MuSLR/LogiCAM
 
-## Modulo 3: VisuLogic
-
-O VisuLogic fica em:
-
-```text
-VisuLogic/
+```bash
+docker compose run --rm app python MuSLR/muslr_agent.py \
+  --dataset MuSLR/data/muslr_sample.jsonl \
+  --id demo_001
 ```
 
-Este modulo usa o codigo oficial de avaliacao do benchmark VisuLogic. O dataset completo e os outputs locais nao devem ser enviados para o GitHub.
+### Analisar uma imagem com o LLaVA-SpaceSGG
 
-Foi acrescentado um adaptador `iaedu`, usando as mesmas variaveis da API IAedu dos outros modulos. Tambem foi mantido o adaptador `ollama:llava`, permitindo avaliar o benchmark com o modelo multimodal local do Ollama.
-
-Preparar ambiente:
-
-```powershell
-cd .\VisuLogic\VisuLogic-Eval
-conda create -n visulogic python=3.10 -y
-conda activate visulogic
-python -m pip install -r requirements.txt
+```bash
+docker compose run --rm app python LLaVA-SpaceSGG/dataset_pipeline/stage2/run_iaedu_image.py \
+  --image LLaVA-SpaceSGG/images_real/primeira_imagem.png \
+  --output-file LLaVA-SpaceSGG/resultados/teste_docker.json
 ```
 
-Testes rapidos:
+## Ollama como alternativa local
 
-```powershell
-python -m py_compile .\evaluation\eval_model.py .\models\__init__.py .\models\iaedu_api.py
-python .\evaluation\eval_model.py --help
+Depois de instalar o Ollama, descarregar os modelos necessários:
+
+```bash
+ollama pull llama3
+ollama pull llava
 ```
 
-Exemplo de avaliacao local com Ollama:
+O `llama3` é utilizado em tarefas de texto e o `llava` em tarefas com imagens. Um modelo local evita chamadas a APIs, mas os resultados podem ser diferentes e a execução depende da capacidade do computador.
 
-```powershell
-$env:OLLAMA_TIMEOUT="900"
-python .\evaluation\eval_model.py --input_file .\data.jsonl --output_file .\outputs\ollama_llava_visulogic.jsonl --model_path ollama:llava --base_url "http://localhost:11434/api/generate"
-Remove-Item Env:\OLLAMA_TIMEOUT
-```
+## Resultados e documentação
 
-Exemplo de avaliacao com IAedu:
+As evidências produzidas por Pedro Vieira encontram-se nestas pastas:
 
-```powershell
-python .\evaluation\eval_model.py --input_file .\data.jsonl --output_file .\outputs\iaedu_visulogic.jsonl --model_path iaedu --api_timeout 180
-```
+- `LogicRAG/resultados/pedro_*`
+- `MMMU/resultados/pedro_*`
+- `MuSLR/resultados/pedro_*`
+- `VisuLogic/resultados/pedro_*`
 
-Ver instrucoes completas em:
-
-```text
-VisuLogic/README.md
-```
-
-## Modulo 4: MuSLR / LogiCAM
-
-O MuSLR fica em:
-
-```text
-MuSLR/
-```
-
-Este módulo avalia raciocínio simbólico multimodal utilizando a framework LogiCAM. O dataset completo deve ser descarregado de huggingface.co/datasets/Aiden0526/MuSLR. Para demonstrações rápidas, o módulo inclui um ficheiro de exemplo em `MuSLR/data/muslr_sample.jsonl`.
-
-Preparar ambiente:
-
-```powershell
-cd .\MuSLR
-python -m pip install requests python-dotenv pillow
-```
-
-Executar com a API IAedu (nuvem):
-
-```powershell
-python .\muslr_agent.py --dataset .\data\muslr_sample.jsonl --id demo_001
-```
-
-Executar com Ollama (local):
-
-```powershell
-$env:LLM_BACKEND="ollama"
-python .\muslr_agent.py --dataset .\data\muslr_sample.jsonl --id demo_001
-Remove-Item Env:\LLM_BACKEND
-```
-
+Para consultar todos os comandos, resultados individuais e justificações metodológicas, ver [MMMU/RELATORIO_PEDRO.md](MMMU/RELATORIO_PEDRO.md).
