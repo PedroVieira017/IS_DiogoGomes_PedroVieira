@@ -55,11 +55,15 @@ A IAedu foi utilizada como backend multimodal nas experiências controladas.
 
 ## 5. Reprodução do MMMU
 
-O avaliador oficial foi executado sobre as previsões LLaVA-1.5-13B fornecidas pelos autores:
+O avaliador oficial foi executado sobre as previsões LLaVA-1.5-13B e Qwen-VL fornecidas pelos autores:
 
 ```powershell
 python .\main_eval_only.py `
   --output_path .\example_outputs\llava1.5_13b\total_val_output.json `
+  --answer_path .\answer_dict_val.json
+
+python .\main_eval_only.py `
+  --output_path .\example_outputs\qwen_vl\total_val_output.json `
   --answer_path .\answer_dict_val.json
 ```
 
@@ -68,9 +72,10 @@ Resultado:
 | Origem | Exemplos | Accuracy |
 |---|---:|---:|
 | Artigo/leaderboard, LLaVA-1.5-13B | 900 | 36,4% |
-| Avaliação local das previsões fornecidas | 900 | 36,7% |
+| Avaliação local das previsões LLaVA-1.5-13B fornecidas | 900 | 36,7% |
+| Avaliação local das previsões Qwen-VL fornecidas | 900 | 36,1% |
 
-A diferença é de 0,3 pontos percentuais. O resultado é próximo, mas não exatamente igual. As previsões avaliadas foram fornecidas pelos autores e não foram novamente geradas nesta máquina.
+No caso do LLaVA-1.5-13B, a diferença é de 0,3 pontos percentuais. O resultado é próximo, mas não exatamente igual. Em ambos os casos, as previsões avaliadas foram fornecidas pelos autores e não foram novamente geradas nesta máquina. Esta experiência valida o funcionamento do avaliador oficial sobre o conjunto completo de validação, mas não constitui uma nova execução dos modelos LLaVA-1.5-13B ou Qwen-VL.
 
 ## 6. Reprodução do LogicRAG
 
@@ -191,6 +196,7 @@ O avaliador oficial do MMMU confirmou:
 | Experiência | Exemplos | Resultado |
 |---|---:|---:|
 | MMMU, previsões LLaVA fornecidas | 900 | 36,7% |
+| MMMU, previsões Qwen-VL fornecidas | 900 | 36,1% |
 | LogicRAG/KITTI oficial | 101 | Accuracy 0,94 / F1 0,97 |
 | VisuLogic com IAedu | 5 | 60,0% |
 | MuSLR com fluxo LogiCAM | 5 | 60,0% |
@@ -201,7 +207,7 @@ O avaliador oficial do MMMU confirmou:
 
 Os resultados publicados não foram todos reproduzidos exatamente:
 
-- MMMU: resultado próximo, com diferença de 0,3 pontos percentuais.
+- MMMU: o avaliador oficial foi executado sobre 900 previsões fornecidas de cada modelo; no LLaVA-1.5-13B, o resultado ficou a 0,3 pontos percentuais do valor publicado. Os modelos não foram novamente executados.
 - LogicRAG: valores superiores aos publicados, usando 101 perguntas em vez das 100 descritas no artigo.
 - VisuLogic e LogiCAM: integrações executadas sobre amostras oficiais com IAedu, mas sem comparação direta com os modelos originais.
 
@@ -209,13 +215,19 @@ Os dois testes cruzados pedidos foram implementados e executados nos dois sentid
 
 ## 13. Limitações
 
-As experiências com IAedu utilizam amostras de cinco exemplos e não representam a accuracy integral dos benchmarks.
+O dataset completo do VisuLogic (1.000 perguntas) e o dataset MuSLR (1.093 registos) foram descarregados e validados. Contudo, a inferência com IAedu foi executada apenas sobre cinco exemplos de cada experiência. Assim, o VisuLogic, o MuSLR/LogiCAM e os dois testes cruzados utilizam amostras de cinco exemplos e não representam a accuracy integral dos respetivos benchmarks.
+
+Esta limitação deve-se ao tempo de inferência multimodal por exemplo e ao número total de chamadas necessárias. Executar integralmente o VisuLogic, o MuSLR e os testes cruzados nos dois sentidos implicaria milhares de chamadas e um tempo de execução muito superior ao disponível.
+
+Foi utilizado o backend IAedu por ser o backend acessível e já integrado no projeto. Os artigos avaliam modelos e configurações diferentes. Alguns desses modelos dependem de APIs comerciais com chave e créditos pagos; os modelos abertos, embora não tenham necessariamente custo de licença ou API, exigem downloads de vários gigabytes, ambientes específicos e GPU com capacidade adequada. Por estes motivos, não foram executados todos os modelos originais dos artigos.
+
+No MMMU, o avaliador oficial foi executado sobre as 900 previsões LLaVA-1.5-13B e as 900 previsões Qwen-VL disponibilizadas pelos autores. Isto permite confirmar o pipeline de avaliação, mas não equivale a gerar novamente as previsões com os modelos originais.
 
 A reprodução integral exigiria:
 
-- milhares de chamadas multimodais;
-- acesso aos modelos originais;
-- GPU adequada ou serviços pagos;
+- milhares de chamadas multimodais e mais tempo de execução;
+- acesso e configuração dos modelos originais;
+- GPU adequada ou, nos casos aplicáveis, serviços de API pagos;
 - repetição exata das configurações e versões usadas pelos autores.
 
 ## 14. Evidências
