@@ -27,7 +27,8 @@ def load_dotenv(env_path=None):
         key, value = line.split("=", 1)
         key = key.strip()
         value = value.strip().strip('"').strip("'")
-        os.environ[key] = value
+        # Valores fornecidos pelo Docker/menu têm prioridade sobre o .env.
+        os.environ.setdefault(key, value)
 
 
 def _extract_text(payload):

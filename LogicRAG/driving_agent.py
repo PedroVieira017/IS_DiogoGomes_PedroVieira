@@ -168,7 +168,8 @@ def main():
     print("Starting LogicRAG + LLM Integration System...\n")
 
     # pull credentials from .env so we don't hardcode anything sensitive
-    load_dotenv()
+    # As credenciais ficam fora da imagem e são lidas apenas do volume local.
+    load_dotenv(BASE_DIR / ".env")
     llm_backend = os.getenv("LLM_BACKEND", "iaedu").strip().lower()
     api_key = os.getenv("OPENAI_API_KEY")
     api_endpoint = os.getenv("OPENAI_API_ENDPOINT")

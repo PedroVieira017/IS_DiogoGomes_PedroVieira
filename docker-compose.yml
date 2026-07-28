@@ -1,19 +1,23 @@
 services:
   app:
+    image: ipvc-multimodal:latest
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: is_logicrag_container
+    working_dir: /app
+    init: true
     volumes:
       - .:/app
-    # Mapear o host para permitir comunicação direta com o Ollama local (se usado)
+    env_file:
+      - path: ./.env
+        required: false
     extra_hosts:
       - "host.docker.internal:host-gateway"
     environment:
-      # Predefinir endpoint do Ollama dentro do contentor
+      - PYTHONPATH=/app:/app/VisuLogic/VisuLogic-Eval
       - OLLAMA_ENDPOINT=http://host.docker.internal:11434/api/generate
       - OLLAMA_VISION_MODEL=llava
       - OLLAMA_MODEL=llama3.1:8b
-    # Por defeito corre de forma interativa
     stdin_open: true
     tty: true
+    command: ["python", "integra.py"]

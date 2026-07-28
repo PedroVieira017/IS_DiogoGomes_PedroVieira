@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Menu unico para correr os 4 projetos dentro do container (IAedu / Ollama)."""
+"""Menu unico para correr os projetos dentro do container."""
 import os
 import subprocess
 
@@ -16,14 +16,29 @@ def cmd_llava():
 
 def cmd_muslr():
     return ["python", "MuSLR/muslr_agent.py",
-            "--dataset", "MuSLR/data/muslr_sample.jsonl", "--id", "demo_001"]
+            "--dataset", "MuSLR/data/muslr_sample.jsonl", "--id", "demo_001",
+            "--image", "LLaVA-SpaceSGG/images_real/transito.jpg",
+            "--output-file", "MuSLR/resultados/docker_muslr.json"]
 
 
-def cmd_visulogic(backend):
+def cmd_mmmu():
+    return ["python", "MMMU/run_official_eval_docker.py"]
+
+
+def configurar_visulogic_path():
+    """Make the official VisuLogic models package importable from the project root."""
+    eval_dir = "VisuLogic/VisuLogic-Eval"
+    current_path = os.environ.get("PYTHONPATH", "")
+    entries = [entry for entry in current_path.split(os.pathsep) if entry]
+    if eval_dir not in entries:
+        os.environ["PYTHONPATH"] = os.pathsep.join([eval_dir, *entries])
+
+
+def cmd_visulogic_avaliacao(backend):
     ep = os.getenv("OLLAMA_ENDPOINT", "http://host.docker.internal:11434/api/generate")
     # eval_model.py faz sys.path.append(".") e importa o pacote `models`, por isso
     # precisa que essa pasta esteja no PYTHONPATH quando corre a partir de /app.
-    os.environ["PYTHONPATH"] = "VisuLogic/VisuLogic-Eval"
+    configurar_visulogic_path()
     base = ["python", "VisuLogic/VisuLogic-Eval/evaluation/eval_model.py",
             "--input_file", "VisuLogic/VisuLogic-Eval/demo/data.jsonl",
             "--output_file", "VisuLogic/VisuLogic-Eval/outputs/docker_visulogic.jsonl"]
@@ -34,12 +49,30 @@ def cmd_visulogic(backend):
     return base
 
 
-PROJETOS = {"1": "Logic-RAG", "2": "LLaVA-SpaceSGG", "3": "MuSLR / LogiCAM", "4": "VisuLogic"}
+def cmd_visulogic_manual(backend, image_path, question):
+    ep = os.getenv("OLLAMA_ENDPOINT", "http://host.docker.internal:11434/api/generate")
+    configurar_visulogic_path()
+    base = ["python", "VisuLogic/VisuLogic-Eval/evaluation/manual_query.py",
+            "--image", image_path, "--question", question]
+    if backend == "ollama":
+        base += ["--model_path", "ollama:llava", "--base_url", ep]
+    else:
+        base += ["--model_path", "iaedu"]
+    return base
+
+
+PROJETOS = {
+    "1": "Logic-RAG",
+    "2": "LLaVA-SpaceSGG",
+    "3": "MuSLR / LogiCAM",
+    "4": "VisuLogic",
+    "5": "MMMU (avaliacao oficial offline)",
+}
 
 
 def main():
     print("=" * 52)
-    print("  IS_DiogoGomes_PedroVieira - Integracao dos 4 projetos")
+    print("  Pedro Vieira - Benchmarks de raciocinio multimodal")
     print("=" * 52)
     for k, nome in PROJETOS.items():
         print("   " + k + ". " + nome)
@@ -47,6 +80,9 @@ def main():
     escolha = input("\nProjeto a correr: ").strip()
     if escolha not in PROJETOS:
         return 0
+    if escolha == "5":
+        print("\n>>> MMMU | avaliacao offline das previsoes oficiais\n")
+        return subprocess.call(cmd_mmmu(), env=os.environ)
     backend = input("Backend [iaedu/ollama] (Enter = iaedu): ").strip().lower() or "iaedu"
     if backend not in ("iaedu", "ollama"):
         backend = "iaedu"
@@ -58,7 +94,16 @@ def main():
     elif escolha == "3":
         cmd = cmd_muslr()
     else:
-        cmd = cmd_visulogic(backend)
+        modo = input("Modo VisuLogic [manual/benchmark] (Enter = manual): ").strip().lower()
+        if modo in ("benchmark", "avaliacao", "avaliação"):
+            cmd = cmd_visulogic_avaliacao(backend)
+        else:
+            image_path = input("Caminho da imagem: ").strip().strip('"').strip("'")
+            question = input("Pergunta sobre a imagem: ").strip()
+            if not image_path or not question:
+                print("A imagem e a pergunta sao obrigatorias no modo manual.")
+                return 1
+            cmd = cmd_visulogic_manual(backend, image_path, question)
     print("\n>>> " + PROJETOS[escolha] + "  |  backend = " + backend + "\n")
     return subprocess.call(cmd, env=os.environ)
 

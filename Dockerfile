@@ -1,22 +1,17 @@
-FROM python:3.10-slim
+FROM python:3.10-slim-bookworm
 
-# Evitar a geração de ficheiros .pyc e garantir outputs em tempo real
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
+ENV PYTHONPATH=/app:/app/VisuLogic/VisuLogic-Eval
 
 WORKDIR /app
 
-# Instalar dependências do sistema necessárias para compilações básicas (se houver)
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential \
-    && rm -rf /var/lib/apt/lists/*
-
-# Copiar e instalar as dependências de Python
 COPY requirements.docker.txt .
-RUN pip install --no-cache-dir -r requirements.docker.txt
+RUN python -m pip install --no-cache-dir --upgrade pip \
+    && python -m pip install --no-cache-dir -r requirements.docker.txt
 
-# Copiar todo o código do repositório
 COPY . .
 
-# Comando padrão
-CMD ["python", "LogicRAG/driving_agent.py"]
+RUN python docker_check.py
+
+CMD ["python", "integra.py"]

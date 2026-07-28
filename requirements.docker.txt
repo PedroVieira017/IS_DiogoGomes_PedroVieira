@@ -1,7 +1,8 @@
-requests
-python-dotenv
-pillow
-tqdm
-openai
-numpy
-opencv-python-headless
+requests>=2.31,<3
+python-dotenv>=1,<2
+pillow>=10,<13
+tqdm>=4.66,<5
+openai>=1,<3
+numpy>=1.26,<3
+opencv-python-headless>=4.9,<5
+PyYAML>=6,<7

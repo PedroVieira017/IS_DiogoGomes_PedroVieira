@@ -1,4 +1,4 @@
-# Controlo de versões e metadados (o .git sozinho tem GBs)
+# Controlo de versoes e metadados
 .git
 .gitignore
 .vscode
@@ -6,22 +6,42 @@
 .DS_Store
 **/.DS_Store
 
-# Ambientes virtuais locais (recriados dentro da imagem via requirements.docker.txt)
+# Credenciais: nunca devem ser incorporadas na imagem
+.env
+**/.env
+**/.env.*
+!.env.example
+
+# Ambientes virtuais locais
 LogicRAG/lrag_mac/
 LLaVA-SpaceSGG/llava_mac/
 **/venv/
 **/.venv/
 
-# Dados grandes e pré-computados (montados por volume quando necessários)
+# Dados grandes e pre-computados
 LogicRAG/LogicRAG_Data/
-**/__MACOSX/
+LogicRAG/track_in_kitti_test/
+MuSLR/MuSLR-Dataset/
+MuSLR/MuSLR-Code/data/
+MuSLR/MuSLR-Code/results/
+VisuLogic/VisuLogic-Eval/data.jsonl
+VisuLogic/VisuLogic-Eval/images/
+VisuLogic/VisuLogic-Eval/images.zip
+**/__MACOSX__/
 
-# Caches e artefactos de execução
+# Caches e artefactos de execucao
 **/__pycache__/
 **/*.pyc
+**/.cache/
 **/outputs/
 **/resultados/
+resultados_pipeline/
+entrega_visulogic_2026-07-19/
+tmp/
 
-# Documentação e ambientes conda (não usados no build Docker)
+# Documentacao pesada e ambientes que nao sao usados no build
 **/*.ipynb
 **/environment.yml
+**/*.pdf
+**/*.zip
+**/*.parquet
